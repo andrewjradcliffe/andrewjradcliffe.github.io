@@ -1,0 +1,9 @@
+Assorted thoughts, made accessible to the world at large.
+* Articles
+** Greatest convex minorant / least concave majorant
+Currently in [[file:gcm-algorithm.pdf][pre-pre-print]] stage, but the idea is crystallized.  More
+will be added (e.g. online algorithm), but in order to get it on
+=crates.io= sooner rather than later, while providing users a rigorous
+foundation, I opt for release here.  This needs endorsement prior to
+submission to =arXiv.org=. When that happens, the link will be updated
+to point there.
