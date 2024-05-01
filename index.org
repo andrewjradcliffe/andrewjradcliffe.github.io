@@ -1,4 +1,6 @@
-Assorted thoughts, made accessible to the world at large.
+#+OPTIONS: timestamp:nil author:nil
+
+Might be of interest?
 * Articles
 ** Greatest convex minorant / least concave majorant
 Currently in [[file:gcm-algorithm.pdf][pre-pre-print]] stage, but the idea is crystallized.  More
@@ -7,3 +9,56 @@ will be added (e.g. online algorithm), but in order to get it on
 foundation, I opt for release here.  This needs endorsement prior to
 submission to =arXiv.org=. When that happens, the link will be updated
 to point there.
+
+* Julia packages
+The useful ones
+** [[https://github.com/andrewjradcliffe/Whitening.jl][Whitening.jl]]
+Whitening transformations: forward and inverse. Lightweight, with no
+dependencies other than =LinearAlgebra= stdlib.
+** [[https://github.com/andrewjradcliffe/OptimizationTestFunctions.jl][OptimizationTestFunctions.jl]]
+A wide variety of functions, $f : \mathbb{R}^{n} \mapsto \mathbb{R}$,
+which are most frequently used to test mathematical optimization
+algorithms. Also handy for testing automatic differentiation
+implementations.
+** [[https://github.com/andrewjradcliffe/LogExpFunctionsExt.jl][LogExpFunctionsExt.jl]]
+Lightweight, sensible extensions to the [[https://github.com/JuliaStats/LogExpFunctions.jl][LogExpFunctions.jl]] package.
+** [[https://github.com/andrewjradcliffe/MarsagliaDiscreteSamplers.jl][MarsagliaDiscreteSamplers.jl]]
+Very fast samplers for discrete probability distributions.
+- Needs updated to reflect deprecation of =LoopVectorization.jl= in Julia 1.11
+** [[https://github.com/andrewjradcliffe/CategoricalMonteCarlo.jl][CategoricalMonteCarlo.jl]]
+Ever wanted to sample from very high-dimensional joint distributions
+comprised entirely of discrete, independent marginals? This package
+does just that; it also offers various options for in-place
+transformation.
+- Also needs updated to reflect deprecation of =LoopVectorization.jl= in Julia 1.11
+** [[https://github.com/andrewjradcliffe/VectorizedReduction.jl][VectorizedReduction.jl]]
+Codegen for fast folds. Given the deprecation of
+=LoopVectorization.jl= in Julia 1.11, it may not be worthwhile to
+update this. It was great while it lasted.
+** [[https://github.com/andrewjradcliffe/RecursiveTiles.jl][RecursiveTiles.jl]]
+Ever receive the following? A table comprised of flattened trees,
+with:
+- parent-child relationships spanning more than one column
+- arbitrary order of columns, with no correspondence to parent-child
+  relationship
+- multiple flattened trees vertically concatenated into the same
+  table, but with unspecified begin/end
+If so, welcome to my life a few years ago. This package will enable
+you to roll that mess back into trees with a few lines of code.
+** [[https://github.com/andrewjradcliffe/MonteCarloSummary.jl][MonteCarloSummary.jl]]
+The name says it all.
+
+* Rust crates
+** [[https://crates.io/lnexp][lnexp]]
+Compositions of =log=, =log1p=, =exp=, and =expm1=, carefully
+evaluated so as to avoid underflow/overflow.
+** [[https://crates.io/logsumexp][logsumexp]]
+Online (1-pass) [[https://en.wikipedia.org/wiki/LogSumExp][LogSumExp]] for iterators.
+** [[https://crates.io/gcm-lcm][gcm-lcm]]
+Greatest convex minorant, least concave majorant. Useful for variety
+of purposes; my interest was related to stochastic processes, but has
+general applicability as a convex (or concave) function approximator.
+** [[https://crates.io/horner-eval][horner-eval]]
+Evaluate polynomials using [[https://en.wikipedia.org/wiki/Horner%27s_method][Horner's method]]. Unroll polynomials of
+fixed size at compile time (and use =MulAdd=); useful if writing
+numerical libraries.
