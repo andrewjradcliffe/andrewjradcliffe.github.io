@@ -49,16 +49,16 @@ you to roll that mess back into trees with a few lines of code.
 The name says it all.
 
 * Rust crates
-** [[https://crates.io/lnexp][lnexp]]
+** [[https://crates.io/crates/lnexp][lnexp]]
 Compositions of =log=, =log1p=, =exp=, and =expm1=, carefully
 evaluated so as to avoid underflow/overflow.
-** [[https://crates.io/logsumexp][logsumexp]]
+** [[https://crates.io/crates/logsumexp][logsumexp]]
 Online (1-pass) [[https://en.wikipedia.org/wiki/LogSumExp][LogSumExp]] for iterators.
-** [[https://crates.io/gcm-lcm][gcm-lcm]]
+** [[https://crates.io/crates/gcm-lcm][gcm-lcm]]
 Greatest convex minorant, least concave majorant. Useful for variety
 of purposes; my interest was related to stochastic processes, but has
 general applicability as a convex (or concave) function approximator.
-** [[https://crates.io/horner-eval][horner-eval]]
+** [[https://crates.io/crates/horner-eval][horner-eval]]
 Evaluate polynomials using [[https://en.wikipedia.org/wiki/Horner%27s_method][Horner's method]]. Unroll polynomials of
 fixed size at compile time (and use =MulAdd=); useful if writing
 numerical libraries.
