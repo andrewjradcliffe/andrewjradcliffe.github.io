@@ -20,6 +20,8 @@ A wide variety of functions, $f : \mathbb{R}^{n} \mapsto \mathbb{R}$,
 which are most frequently used to test mathematical optimization
 algorithms. Also handy for testing automatic differentiation
 implementations.
+** [[https://github.com/andrewjradcliffe/VectorizedReduction.jl][VectorizedReduction.jl]]
+Codegen for fast folds.
 ** [[https://github.com/andrewjradcliffe/LogExpFunctionsExt.jl][LogExpFunctionsExt.jl]]
 Lightweight, sensible extensions to the [[https://github.com/JuliaStats/LogExpFunctions.jl][LogExpFunctions.jl]] package.
 ** [[https://github.com/andrewjradcliffe/MarsagliaDiscreteSamplers.jl][MarsagliaDiscreteSamplers.jl]]
@@ -29,8 +31,6 @@ Ever wanted to sample from very high-dimensional joint distributions
 comprised entirely of discrete, independent marginals? This package
 does just that; it also offers various options for in-place
 transformation.
-** [[https://github.com/andrewjradcliffe/VectorizedReduction.jl][VectorizedReduction.jl]]
-Codegen for fast folds.
 ** [[https://github.com/andrewjradcliffe/RecursiveTiles.jl][RecursiveTiles.jl]]
 Ever receive the following? A table comprised of flattened trees,
 with:
