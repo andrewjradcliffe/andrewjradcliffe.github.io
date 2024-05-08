@@ -24,17 +24,13 @@ implementations.
 Lightweight, sensible extensions to the [[https://github.com/JuliaStats/LogExpFunctions.jl][LogExpFunctions.jl]] package.
 ** [[https://github.com/andrewjradcliffe/MarsagliaDiscreteSamplers.jl][MarsagliaDiscreteSamplers.jl]]
 Very fast samplers for discrete probability distributions.
-- Needs updated to reflect deprecation of =LoopVectorization.jl= in Julia 1.11
 ** [[https://github.com/andrewjradcliffe/CategoricalMonteCarlo.jl][CategoricalMonteCarlo.jl]]
 Ever wanted to sample from very high-dimensional joint distributions
 comprised entirely of discrete, independent marginals? This package
 does just that; it also offers various options for in-place
 transformation.
-- Also needs updated to reflect deprecation of =LoopVectorization.jl= in Julia 1.11
 ** [[https://github.com/andrewjradcliffe/VectorizedReduction.jl][VectorizedReduction.jl]]
-Codegen for fast folds. Given the deprecation of
-=LoopVectorization.jl= in Julia 1.11, it may not be worthwhile to
-update this. It was great while it lasted.
+Codegen for fast folds.
 ** [[https://github.com/andrewjradcliffe/RecursiveTiles.jl][RecursiveTiles.jl]]
 Ever receive the following? A table comprised of flattened trees,
 with:
