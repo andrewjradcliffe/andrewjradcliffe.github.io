@@ -24,7 +24,7 @@ implementations.
 ** [[https://github.com/andrewjradcliffe/VectorizedReduction.jl][VectorizedReduction.jl]]
 Codegen for fast folds.
 ** [[https://github.com/andrewjradcliffe/LogExpFunctionsExt.jl][LogExpFunctionsExt.jl]]
-Lightweight, sensible extensions to the [[https://github.com/JuliaStats/LogExpFunctions.jl][LogExpFunctions.jl]] package.
+Update: these were [[https://github.com/JuliaStats/LogExpFunctions.jl/pull/82][merged]] into the [[https://github.com/JuliaStats/LogExpFunctions.jl][LogExpFunctions.jl]] package.
 ** [[https://github.com/andrewjradcliffe/MarsagliaDiscreteSamplers.jl][MarsagliaDiscreteSamplers.jl]]
 Very fast samplers for discrete probability distributions.
 ** [[https://github.com/andrewjradcliffe/CategoricalMonteCarlo.jl][CategoricalMonteCarlo.jl]]
