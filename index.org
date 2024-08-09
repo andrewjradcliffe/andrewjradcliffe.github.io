@@ -50,7 +50,7 @@ The name says it all.
 The README sort of says it all: do you need to integrate Stan in your
 system being developed in Rust? If yes, then you want this crate!
 
-Eventually I'll get around to getting the PR merged... life has taken
+Eventually I'll get around to getting the [[https://github.com/stan-dev/design-docs/pull/51][PR]] merged... life has taken
 a few unexpected branches since January 2024.
 ** [[https://crates.io/crates/lnexp][lnexp]]
 Compositions of =log=, =log1p=, =exp=, and =expm1=, carefully
