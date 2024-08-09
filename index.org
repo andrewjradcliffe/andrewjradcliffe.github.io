@@ -1,4 +1,5 @@
 #+OPTIONS: timestamp:nil author:nil
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://cdn.simplecss.org/simple.min.css" />
 
 Might be of interest?
 * Articles
@@ -45,6 +46,12 @@ you to roll that mess back into trees with a few lines of code.
 The name says it all.
 
 * Rust crates
+** [[https://github.com/andrewjradcliffe/cmdstan-rs][cmdstan-rs]]
+The README sort of says it all: do you need to integrate Stan in your
+system being developed in Rust? If yes, then you want this crate!
+
+Eventually I'll get around to getting the PR merged... life has taken
+a few unexpected branches since January 2024.
 ** [[https://crates.io/crates/lnexp][lnexp]]
 Compositions of =log=, =log1p=, =exp=, and =expm1=, carefully
 evaluated so as to avoid underflow/overflow.
@@ -58,3 +65,8 @@ general applicability as a convex (or concave) function approximator.
 Evaluate polynomials using [[https://en.wikipedia.org/wiki/Horner%27s_method][Horner's method]]. Unroll polynomials of
 fixed size at compile time (and use =MulAdd=); useful if writing
 numerical libraries.
+
+* Rust applications
+** [[https://github.com/andrewjradcliffe/dungeoncrawl][dungeoncrawl]]
+You have probably played a video game at some point. Have you ever
+created one? The latter is more interesting, I promise!
