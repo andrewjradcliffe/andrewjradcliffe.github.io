@@ -1,6 +1,0 @@
-#+SETUPFILE: ../../site/setupfile.org
-#+TITLE: Blog
-
-Essays. Mostly technical, sometimes not.
-
-- =2026-06-01= [[/blog/2026-06-01-imagine-the-draft-happy/][Pre-pre-prints, or: one must imagine the draft happy]]

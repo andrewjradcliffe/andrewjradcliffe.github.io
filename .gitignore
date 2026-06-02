@@ -17,3 +17,6 @@
 
 # Regenerable visual-review screenshots
 /notes/screenshots/*.png
+
+# Generated blog index (rebuilt by publish.el each run)
+/src/blog/index.org
