@@ -1145,9 +1145,13 @@ These three are referenced by the plan. Read before Part III.
 - =htmlize.el=, =julia-mode.el= (+latexsubs) are VENDORED into
   =site/lib/= (pinned; =site/lib/PROVENANCE.txt=) for offline,
   reproducible builds — consistent with the no-CDN §3 decision.
-- Screenshots (Q16.3): the env's =chromium-browser= wrapper is broken
-  (missing =.real=), so automated screenshots are unavailable here;
-  visual review is via your local =make serve=. Structural verification
-  (grep/contrast/HTTP) substitutes in this transcript.
+- Screenshots (Q16.3): the env's =/usr/bin/chromium-browser= is a broken
+  167-byte stub, BUT a real headless browser works via Playwright's
+  bundled binary under Xvfb. Recipe lives in =scripts/shoot.sh=:
+  finds =~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome=, serves
+  =public/=, runs =xvfb-run CHROME --headless=new --screenshot=. Used to
+  visually confirm Stage 1 (palette, JuliaMono, nav highlight, and
+  MathJax typeset to =mjx-container=). Routine review, though, is the
+  user's own local =make serve= — shoot.sh is on-demand, PNGs gitignored.
 - CI build (Stage 4) must =make clean= first: incremental publish does
   not prune pages deleted from =src/=.

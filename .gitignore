@@ -14,3 +14,6 @@
 
 # Generated fixture output
 /site/fixtures/*.html
+
+# Regenerable visual-review screenshots
+/notes/screenshots/*.png
