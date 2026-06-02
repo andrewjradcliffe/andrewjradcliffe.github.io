@@ -1,0 +1,1133 @@
+#+TITLE: Personal site overhaul — specification & open questions
+#+OPTIONS: toc:2 num:t ^:{}
+#+STARTUP: overview
+
+* How to use this document
+This is the working spec for redesigning https://andrewjradcliffe.github.io/.
+
+It has three parts:
+- *Part I — Proposed design.* Opinionated proposals for theme, layout,
+  typography, content rearrangement, and the three new components
+  (blog, open-source projects, pre-prints). Read this first; the
+  questions hang off it.
+- *Part II — Open questions.* One nested list, organized by spec
+  section and by each bullet within it. Every question has a stable ID
+  (=Qn.m=), a /Recommendation/ (my default if you don't care), and an
+  =ANSWER:= slot. To go fast: reply "defaults for §X" and I'll take the
+  recommendations.
+- *Part III — Implementation plan.* Deliberately empty. Per your
+  instructions, I will not write it until the questions are answered.
+  It will be granular: each leaf bullet ≤10 min and independently
+  verifiable.
+
+Conventions: =§= = section. "the Zone" = the proposed dark theme.
+Reference shorthand: STALKER / SOLARIS / MWQ (/The Man Without
+Qualities/) / SISYPHUS / EMACS / LINUX.
+
+----------------------------------------------------------------------
+
+* PART I — Proposed design
+** Vibe synthesis (what each reference actually contributes)
+| Reference | Mood it carries                              | Concrete design hooks                                                        |
+|-----------+----------------------------------------------+------------------------------------------------------------------------------|
+| STALKER   | The Zone: shifting rules, ruin, thresholds   | Muted/oxidized palette; an "entry" threshold on the landing page; patient,   |
+|           | the indirect path; sepia framing             | sparse layout; the site as a /zone/ one traverses, not a brochure            |
+| SOLARIS   | Sentient ocean; materialized memory; the     | The blog/journal as "materialized memory"; oceanic teal; introspective       |
+|           | limits of knowledge; slow orbit              | epigraphs; the unknowable Other = the reader                                 |
+| MWQ       | "Sense of possibility"; essayism; precision  | Essayistic blog; precision + irony in copy; embrace of the /unfinished/      |
+|           | meeting irony; the great unfinished novel    | ("pre-pre-print" is peak Musil); qualities held in suspension                |
+| SISYPHUS  | The absurd; lucid revolt; "imagine him happy"| Recurring-task motif (training runs killed & relaunched); a boulder/epigraph;|
+|           | dignity in repetition                        | the journal cadence itself is Sisyphean                                      |
+| EMACS     | Text-centric, keyboard-driven, self-doc      | JuliaMono; a modeline footer; keyboard nav; org aesthetic; minibuffer gag    |
+| LINUX     | Terminal, shell, man pages, the prompt       | TTY/prompt motif; man-page section numbering; monospace; low chrome          |
+
+*Thesis.* A dark, low-contrast "terminal opened inside the Zone":
+JuliaMono throughout, oxidized-metal accents on near-black, Emacs
+modeline + shell-prompt chrome, copy that is terse and lucidly
+absurdist. Restraint in motion (Tarkovsky long takes): slow fades, no
+bounce, nothing autoplaying.
+
+** Information architecture (proposed)
+Move from one scroll to a small multi-page "zone." Proposed sitemap:
+- =/= — Landing. Epigraph + a one-line identity + a terminal-style
+  index (links to the four areas). Keeps the current tagline energy.
+- =/projects/= — Open-source work, regrouped /by language → by kind/
+  (see §I.6). Absorbs today's "Julia packages", "Rust crates", "Rust
+  applications".
+- =/writing/= — Pre-prints + papers. Absorbs today's "Writing" (GCM/LCM).
+- =/blog/= — Index of essays; each post its own page.
+- =/blog/<slug>/= — Individual posts.
+- =/about/= — (optional) Identity, colophon, contact, /uses/.
+- =/feed.xml= — RSS/Atom for the blog.
+
+** Build pipeline (proposed)
+Recommend =org-publish= (=org-publish-project-alist= in a committed
+=publish.el=), driven by =emacs --batch=. Rationale: keeps everything
+Org + Emacs native (on-theme), gives multi-page + sitemap + RSS + asset
+copying for free, and can be wired to a GitHub Actions job or a local
+=make publish=. Single shared =setupfile.org= / =HTML_HEAD= for the
+theme. Alternative considered & rejected for vibe reasons: Hugo/Zola.
+
+** Theme — color (proposed)
+Default dark theme "the Zone" (CSS custom properties):
+- =--bg=        #0e1110  (near-black, faint green of the Zone at dusk)
+- =--bg-alt=    #161a18  (panels, code blocks, modeline)
+- =--fg=        #c8c2b6  (aged paper / dust)
+- =--fg-muted=  #7c8079  (lichen grey-green; metadata)
+- =--amber=     #c8923d  (ochre/sepia warmth; headings, prompt)
+- =--rust=      #a44f3e  (oxidized iron; emphasis, visited links)
+- =--teal=      #4e8d86  (Solaris ocean; links)
+- links =--teal=, hover =--amber=; selection in =--rust= at low alpha.
+Optional alternate light theme "Sepia" (Stalker's framing scenes):
+=--bg= #e8e0cf, =--fg= #2a2622, accents darkened. Toggle persists in
+=localStorage=.
+
+** Typography (proposed)
+JuliaMono everywhere (you said "preferably JuliaMono where
+applicable"), self-hosted as subset =woff2= for performance, with a
+monospace system fallback. Headings = JuliaMono heavier weight +
+=--amber=. Math via MathJax (kept), tuned to sit with JuliaMono.
+
+** Layout & navigation motifs (proposed)
+- Top: a shell prompt line, e.g. =andrew@zone:~/projects $= acting as
+  the page identity + breadcrumb.
+- Bottom: an Emacs-style modeline, e.g.
+  =-UUU:%%--F1  projects.org   All  (Org)  [the Zone]=.
+- Section numbers as man-page-ish headers.
+- Keyboard nav as progressive enhancement: =j/k= scroll, =g g / G= top/
+  bottom, =/= focus search/jump, =?= help overlay (the "minibuffer").
+- Restrained motion only.
+
+** Per-section content treatment (proposed)
+- *Landing*: keep "The code says it best…" as the epigraph; add a
+  second epigraph from SISYPHUS/MWQ register (original, not quoted
+  verbatim); terminal index to the four areas.
+- *Projects*: regroup the existing 8 Julia pkgs + 5 Rust crates +
+  1 Rust app. Mark =LogExpFunctionsExt.jl= as "merged upstream" (it
+  is). Surface journal-era OSS if you want it (=anytomd-rs= PRs,
+  =gastown= contribs, the planned =bevy= game) — see questions.
+- *Writing/Pre-prints*: GCM/LCM "pre-pre-print" PDF gets a real landing
+  with abstract + status badge (=pre-pre-print → arXiv pending=).
+- *Blog*: new. Seeded with 1–3 essays in your voice (you approve topics
+  via questions; I draft, you edit — no verbatim journal content).
+
+** Part I deltas (proposals OVERRIDDEN by Part II answers)
+The proposals above are the original pitch; these were changed during
+Q&A. Where they conflict, *the answers win*:
+- *Shell-prompt header: DROPPED* (Q10.1). No =andrew@zone:~ $= motif.
+  Header is a plain text breadcrumb. The terminal identity now lives in
+  the modeline footer alone.
+- *Landing tagline: REPLACED, not kept* (Q9.1). "The code says it
+  best…" is retired; I draft 3 new primary-line options + 3 second-
+  epigraph options, all original and unattributed.
+- *Influences: FULLY IMPLICIT* (Q11.5). Nothing names Stalker/Solaris/
+  Musil/Camus anywhere — not even the colophon. Colophon may name tools
+  only (Emacs/Org/JuliaMono).
+- *Typography: mono + serif* (Q5.1/Q5.8), not JuliaMono-everywhere.
+  Serif (EB Garamond family) for blog post bodies ONLY; JuliaMono
+  everywhere else.
+- *Projects grouping: DOMAIN-first* with language as a tag (Q6.1),
+  6 buckets — not language-first. Only the established 14 projects
+  (Q6.5); =anytomd-rs=/=bevy=/=gastown= omitted for now.
+- *GCM/LCM: index ENTRY, not a sub-page* (Q7.2). No =/writing/gcm-lcm/=
+  dir; status word, not a pipeline graphic (Q7.6); no "Forthcoming"
+  list (Q7.7).
+- *Keyboard nav + =/= minibuffer + theme toggle: STAGE 2* (Q10.3/10.4).
+  Launch is essentially no-JS (only the on-demand MathJax loader).
+- *Pages: + =/uses=* (Q2.2). Final set: =/=, =/projects=, =/writing=,
+  =/blog=, =/about=, =/uses=, =/feed.xml=.
+- *Identity: FULL* — name, plain photo (=/about= only), email + GitHub
+  + Scholar/ORCID (Q1.3). Departs from the anonymous =&lrm;= framing.
+- *Edge: KEPT* at journal level (Q11.4) but never aimed at named people.
+- *Delivery: direct commits to =main=, deploy gated on a =v1= tag*
+  (Q16.2/Q16.5) — the live site flips once, complete.
+
+----------------------------------------------------------------------
+
+* PART II — Open questions
+:PROPERTIES:
+:NOTE: Answer inline after each =ANSWER:=. "defaults for §X" = accept all recommendations in that section.
+:END:
+
+*** RESOLVED ANCHORS (decided 2026-06-01)
+These four load-bearing decisions are settled and propagated below:
+1. *Build*: =org-publish= + =publish.el= + GitHub Actions → Pages;
+   =main= stays source-only. (Q3.1, Q3.4, Q3.5)
+2. *Architecture*: multi-page "zone" (=/=, =/projects=, =/writing=,
+   =/blog=, =/about=, =/feed.xml=). (Q2.1, Q2.2)
+3. *Theme*: dark "the Zone" default; honor =prefers-color-scheme=;
+   light "Sepia" deferred to stage 2. (Q4.1, Q4.3)
+4. *Blog*: launch with ONE seed essay; I draft from an approved topic,
+   you edit to voice; no verbatim journal content. (Q8.1, Q8.2)
+
+** §1 Scope, goals, audience
+*** Q1.1 Primary goal of the site?
+- Options: (a) professional shop-window for OSS + research; (b)
+  personal/artistic space first, résumé second; (c) both, equal.
+- Recommendation: (c), leaning artistic in /form/, professional in
+  /content/.
+- ANSWER: *(c) both, equal* — professional content, artistic form.
+  This is the lens for resolving all later trade-offs.
+*** Q1.2 Primary audience?
+- Options: recruiters/peers in ML/numerics; OSS users; general/literary
+  readers of the blog; future-you.
+- Recommendation: peers + OSS users, with the blog welcoming to all.
+- ANSWER: *All four* — peers in ML/numerics, OSS users, general blog
+  readers, and future-you. Design must serve all without diluting.
+*** Q1.3 Identity level? (Today the =<title>= is an invisible =&lrm;= —
+near-anonymous.)
+- Options: (a) full name + photo + contact; (b) name only, no photo;
+  (c) keep it oblique/anonymous as now.
+- Recommendation: (b) — name + minimal contact, no photo; preserves
+  mystique while being findable.
+- ANSWER: *(a) Full — name, photo, contact.* Departure from the
+  current anonymous =&lrm;= framing. Triggers follow-ups: contact
+  channels (Q1.3a), photo treatment (Q1.3b), real =/about= page,
+  OG card text (Q12.2).
+*** Q1.4 Is this a hard redesign now, or staged?
+- Recommendation: stage it — theme+IA+projects first, blog+RSS second,
+  pre-print landing third. (Plan will be sequenced this way.)
+- ANSWER: *Staged* (settled via Q16.1): 4 stages, all committed to
+  =main=, deployed once at the =v1= tag (Q16.5).
+*** Q1.5 Any content that must NOT appear (employer-internal, journal
+specifics, real names from the journal)?
+- Recommendation: nothing from the journal verbatim; no internal links
+  (=*.amazon.com=), no colleague names.
+- ANSWER: *Hard exclusions* (reaffirmed by Q8.10/Q11.4): nothing from
+  the journal verbatim; no =*.amazon.com= / internal links; no
+  colleague or real names from the journal; no divorce/health/employer-
+  politics specifics. I will self-audit every drafted line against this.
+*** Q1.6 Deadline / occasion driving this (job search, paper release,
+just because)?
+- ANSWER: *Ongoing / just because* — no hard deadline. Craft over
+  speed; build to last; staged PRs with polish at each stage.
+*** Q1.3a [follow-up] Which contact channels to show?
+- ANSWER: *Email, GitHub, Scholar/ORCID.* No LinkedIn. On =/about=
+  (and possibly footer). Confirmed 2026-06-01:
+  + Email: =andrewjradcliffe@gmail.com= (git address) — obfuscated.
+  + GitHub: https://github.com/andrewjradcliffe
+  + Google Scholar: https://scholar.google.com/citations?user=2CHr3mEAAAAJ
+  + ORCID: 0000-0002-8817-0383 (https://orcid.org/0000-0002-8817-0383)
+*** Q1.3b [follow-up] How is the photo treated visually?
+- ANSWER: *Plain photo* (untreated), placed on =/about= only.
+*** Q1.3c [follow-up] Placement of identity/photo?
+- ANSWER: */about only.* Landing stays sparse and oblique (epigraph +
+  index); name/photo/bio live on =/about=. Preserves entry mystique.
+
+** §2 Information architecture / pages
+*** Q2.1 Multi-page (proposed) vs. keep single long page?
+- Recommendation: multi-page per §I.2.
+- ANSWER: *Multi-page* (settled anchor #2).
+*** Q2.2 Confirm the page set (=/=, =/projects=, =/writing=, =/blog=,
+=/about=, =/feed.xml=). Add/remove any?
+- Candidates to add: =/now= (what I'm doing now), =/uses= (tools),
+  =/reading=, =/talks=.
+- Recommendation: ship =/=, =/projects=, =/writing=, =/blog=, =/about=;
+  defer =/now= /uses/reading.
+- ANSWER: Core five + */uses* (tools/setup; fits the journal's tooling
+  obsession). Defer =/now= (staleness tension) and =/reading=. Final
+  set: =/=, =/projects=, =/writing=, =/blog=, =/about=, =/uses=,
+  =/feed.xml=.
+*** Q2.3 URL style: clean dirs (=/projects/=) vs. flat files
+(=/projects.html=)?
+- Recommendation: clean dirs via per-section =index.html=.
+- ANSWER: *Clean dirs* (=/projects/=, =/writing/gcm-lcm/=,
+  =/blog/<slug>/=) via per-section =index.html=.
+*** Q2.4 Navigation model: persistent top nav, a "minibuffer" jump, or
+both?
+- Recommendation: both — slim top nav + =/= keyboard jump.
+- ANSWER: *Both, but staged.* At LAUNCH: slim persistent top nav as a
+  plain text breadcrumb (no shell prompt — Q10.1). STAGE 2: the =/=
+  keyboard jump (minibuffer). Revised by Q10.1 (no prompt) + Q10.3/10.4
+  (keyboard nav deferred). JS policy = minimal/optional (Q10.5).
+*** Q2.5 Should =/= retain the full project list (one-scroll) as well,
+or be a sparse portal?
+- Recommendation: sparse portal (epigraph + 4 links + modeline).
+- ANSWER: *Sparse portal* — settled by Q1.3c (landing stays oblique;
+  identity lives on =/about=). Epigraph + terminal index + modeline.
+
+** §3 Build pipeline & tooling
+*** Q3.1 Adopt =org-publish= (proposed) vs. keep hand-exported per-file
+vs. external SSG?
+- Recommendation: =org-publish= via =publish.el= + =emacs --batch=.
+- ANSWER: *org-publish* via =publish.el= + =emacs --batch= (anchor #1).
+*** Q3.2 Where should the theme CSS live: inline =HTML_HEAD= (as now),
+a committed =css/style.css= linked via =setupfile.org=, or both?
+- Recommendation: committed =css/style.css= + shared =setupfile.org=;
+  drop the =simple.css= CDN dependency.
+- ANSWER: *Resolved-by-direction:* committed =css/style.css= linked via
+  a shared =setupfile.org=. Implied by choosing self-hosted assets +
+  htmlize (no CDN). Not asked interactively (too granular).
+*** Q3.3 Keep depending on =simple.css= CDN, or self-contained CSS?
+- Recommendation: self-contained (offline-buildable, on-theme; no CDN).
+- ANSWER: *Self-contained, drop simple.css CDN.* Resolved-by-direction
+  (consistent with self-hosted fonts/MathJax/htmlize).
+*** Q3.4 Automate deploy with GitHub Actions (build Org→HTML on push),
+or keep committing built HTML by hand?
+- Recommendation: GitHub Action runs =emacs --batch -l publish.el=;
+  publishes =public/= to Pages. (Removes hand-commit toil.)
+- ANSWER: *Yes* — Action runs =emacs --batch -l publish.el=, publishes
+  =public/= to Pages (anchor #1).
+*** Q3.5 If Actions: commit built HTML to =main= too (so it works
+without CI) or Pages-from-Action only?
+- Recommendation: Pages-from-Action only; keep =main= source-only.
+- ANSWER: *Pages-from-Action only; =main= source-only* (anchor #1).
+*** Q3.6 Provide a local =Makefile= (=make=, =make serve=, =make
+publish=, =make clean=)?
+- Recommendation: yes — LINUX-native ergonomics.
+- ANSWER: *Yes* — =Makefile= with =make= / =make serve= / =make
+  publish= / =make clean=. Local preview alongside the Action.
+*** Q3.7 Pin the Emacs/Org version for reproducible builds?
+- Recommendation: pin Org version in the Action; note it in colophon.
+- ANSWER: *Pin* Emacs + Org version in the Action; note in colophon.
+  TODO: pick exact versions at implementation time (latest stable).
+*** Q3.8 Keep MathJax (CDN) or switch to KaTeX / pre-rendered SVG /
+self-hosted MathJax?
+- Recommendation: keep MathJax but self-host or SRI-pin; you need real
+  math (=\mathbb{R}^n=). Open to KaTeX if you want speed.
+- ANSWER: *Self-host MathJax, load on demand* — only on pages
+  containing math (=/writing=, math-bearing posts), NOT on =/=,
+  =/projects=, etc. This also resolves Q9.6 and feeds Q7.8 / Q13.2.
+
+** §4 Visual theme — color
+*** Q4.1 Default theme: dark "the Zone" (proposed), light "Sepia", or
+system-preference auto?
+- Recommendation: dark default + =prefers-color-scheme= honored + manual
+  toggle.
+- ANSWER: *Dark "the Zone" default* (anchor #3); honor
+  =prefers-color-scheme=; manual toggle ships when Sepia does (stage 2).
+*** Q4.2 Approve the dark palette hexes in §I.4, or adjust?
+- Per-color sign-off: =--bg=, =--bg-alt=, =--fg=, =--fg-muted=,
+  =--amber=, =--rust=, =--teal=.
+- Recommendation: approve as-is; tune after first render.
+- ANSWER: *Approve as starting point; tune at first render.* These
+  hexes also drive the htmlize Emacs code-theme (Q3 highlighting),
+  so accent values are load-bearing for code legibility too.
+*** Q4.3 Provide the light "Sepia" theme at launch, or defer?
+- Recommendation: defer to stage 2 (dark-only at launch).
+- ANSWER: *Defer to stage 2* (dark-only at launch) — anchor #3.
+*** Q4.4 Accent usage for links: teal (proposed) or amber? Visited-link
+color (rust)?
+- ANSWER: *Teal links, amber hover, rust visited* — settled by
+  approving the palette as-is (Q4.2).
+*** Q4.5 How "ruined/textured" should backgrounds be — flat color, a
+faint film-grain/noise overlay, or subtle vignette (STALKER)?
+- Recommendation: flat + optional ~2% grain via CSS; no images.
+- ANSWER: *Flat + ~2% CSS film-grain overlay*, no image files; static
+  under =prefers-reduced-motion=.
+*** Q4.6 Contrast floor: target WCAG AA (recommended) or accept lower
+contrast for mood?
+- Recommendation: AA for body text; mood reserved for chrome/accents.
+- ANSWER: *AA for body text; mood (dim greys/accents) reserved for
+  chrome, metadata, decoration.* Feeds Q13.1.
+
+** §5 Typography (JuliaMono)
+*** Q5.1 JuliaMono for everything, or JuliaMono for headings/code +
+a reading face for long blog prose?
+- Recommendation: JuliaMono everywhere; revisit only if blog prose
+  feels fatiguing.
+- ANSWER: *Mono + serif prose.* JuliaMono for headings, code, chrome,
+  UI, and short text (landing, projects, nav, modeline); a serif
+  reading face for LONG-FORM prose (blog essays — and see Q5.8 for
+  whether /writing & /about prose also use it). Refines the prompt's
+  "JuliaMono where applicable": applicable = everything except
+  long-form reading. Triggers Q5.8 (which serif + scope).
+*** Q5.2 Self-host JuliaMono (subset woff2, recommended) vs. CDN
+(jsDelivr) vs. link to upstream?
+- Recommendation: self-host subsetted =woff2= in =fonts/=.
+- ANSWER: *Self-host* subsetted =woff2= in =fonts/= (settled by the
+  no-CDN / self-contained direction at §3). Applies to JuliaMono (4
+  weights) and the serif (Regular+Italic). =font-display: swap=.
+*** Q5.3 Which JuliaMono weights/styles to ship (Regular, Bold, Italic,
+Light, Medium)? Each weight = bytes.
+- Recommendation: Regular + Bold + Italic only.
+- ANSWER: *Regular + Bold + Italic + Light/Medium.* All four. Light for
+  large headings, Medium for UI/modeline. More bytes accepted for finer
+  hierarchy; all subsetted woff2.
+*** Q5.4 Base font size / line-height / measure (max line length)?
+- Recommendation: 18px, 1.6, ~68ch measure.
+- ANSWER: *18px / 1.6 / ~68ch.*
+*** Q5.5 Use JuliaMono ligatures / contextual alternates (it has many)?
+- Recommendation: enable in code blocks, disable in prose.
+- ANSWER: *Resolved at Q5.5(dup) above: OFF everywhere.* *Off everywhere.* Literal =->=, ===>=, =!== in code; faithful
+  to raw source, best copy-paste clarity. (=font-feature-settings:
+  "liga" 0, "calt" 0=.) NOTE: this fully resolves Q5.5.
+*** Q5.6 Fallback stack if JuliaMono fails to load?
+- Recommendation: =ui-monospace, "JuliaMono", "Cascadia Code", Menlo,
+  Consolas, monospace=.
+- ANSWER: *Accepted:* =JuliaMono, ui-monospace, "Cascadia Code", Menlo,
+  Consolas, monospace= for mono; serif fallback set with Q5.8.
+*** Q5.7 Headings: weight + size scale + the =--amber= color — approve?
+- Recommendation: modular scale 1.25; bold amber; man-page numbering.
+- ANSWER: *Accepted:* modular scale 1.25, headings in JuliaMono
+  (Light for largest, Bold for section), =--amber= color, man-page-ish
+  numbering. Tune at first render.
+*** Q5.8 [follow-up] Which serif for long-form prose, and where exactly?
+- Sub-question A — typeface: see interactive question.
+- Sub-question B — scope: blog only, or also =/writing= + =/about= prose?
+- ANSWER: A — *old-style literary serif* (EB Garamond family or similar;
+  exact cut tunable at render), self-hosted woff2, Regular + Italic
+  (+ Bold if needed). B — *blog post bodies ONLY.* Everywhere else
+  (projects, writing landings, about, uses, nav, chrome) stays
+  JuliaMono. Serif fallback: =Georgia, "Times New Roman", serif=.
+
+** §6 Projects page (open-source) — rearranging existing content
+Current inventory to re-home: Julia (Whitening, OptimizationTestFunctions,
+VectorizedReduction, LogExpFunctionsExt, MarsagliaDiscreteSamplers,
+CategoricalMonteCarlo, RecursiveTiles, MonteCarloSummary); Rust crates
+(cmdstan-rs, lnexp, logsumexp, gcm-lcm, horner-eval); Rust apps
+(dungeoncrawl).
+*** Q6.1 Grouping axis: by language (current), by domain (numerics /
+sampling / data-wrangling / fun), or by status (maintained / merged /
+archived)?
+- Recommendation: primary by language, secondary tag by domain.
+- ANSWER: *Domain primary, language as a tag.* Foregrounds what the
+  work IS over its implementation language — best for the peers
+  audience. Departs from the current language-first layout. Triggers
+  Q6.1a: define the domain buckets and assign all 14 projects.
+*** Q6.2 Show per-project metadata badges (language, crates.io/JuliaReg
+version, stars, license, last-commit, CI)?
+- Recommendation: language + registry version + license; skip stars.
+- ANSWER: *Language tag + registry version + license + repo/registry
+  links.* All four; static at build; text-only (no icons, Q6.10).
+  Stars omitted. TODO: gather versions/licenses at impl time.
+*** Q6.3 Pull descriptions live (from GitHub/crates.io API at build) or
+keep curated hand-written blurbs (current)?
+- Recommendation: keep curated blurbs (they have voice); badges static.
+- ANSWER: *Keep curated blurbs* verbatim (the voice is the point).
+  Light edits only if I flag and you approve.
+*** Q6.4 =LogExpFunctionsExt.jl= is merged upstream — list as "merged",
+move to an "Upstreamed / contributions" subsection, or drop?
+- Recommendation: "Upstreamed contributions" subsection.
+- ANSWER: *Mark inline as "merged upstream → LogExpFunctions.jl"* in
+  bucket 1; no separate subsection (settled, since Q6.5 = "just the 14"
+  means no other contributions to group with it).
+*** Q6.5 Surface journal-era OSS contributions? (=anytomd-rs= PRs to
+=developer0hye/anytomd-rs=; =gastown= contribs; planned =bevy= game.)
+- Recommendation: add =anytomd-rs= contributions; list =bevy= game as
+  "in progress"; omit =gastown= unless you want it.
+- ANSWER: *None — just the established 14.* No =anytomd-rs=, no =bevy=,
+  no =gastown= for now (add later). Consequently NO "Upstreamed
+  contributions" group is needed; =LogExpFunctionsExt.jl= stays inline
+  with a "merged" badge (Q6.4). Sharpest scope.
+
+  *Domain buckets (Q6.1a) — 6 finer buckets, approved:*
+  1. Numerically-stable evaluation: =lnexp= (Rust), =logsumexp= (Rust),
+     =horner-eval= (Rust), =LogExpFunctionsExt.jl= (Julia, merged).
+  2. Sampling & Monte Carlo: =MarsagliaDiscreteSamplers.jl=,
+     =CategoricalMonteCarlo.jl=, =MonteCarloSummary.jl= (Julia),
+     =cmdstan-rs= (Rust).
+  3. Linear algebra & optimization: =Whitening.jl=,
+     =OptimizationTestFunctions.jl= (Julia).
+  4. Approximation: =gcm-lcm= (Rust) — links to the =/writing= pre-print.
+  5. Performance & codegen: =VectorizedReduction.jl= (Julia).
+  6. Data-wrangling / Toys: =RecursiveTiles.jl= (Julia),
+     =dungeoncrawl= (Rust).
+  Note: buckets 4 & 5 hold a single item each — accepted.
+*** Q6.6 =dungeoncrawl=: keep its playful blurb? Add a screenshot/GIF or
+play link? Keep "Rust applications" as its own group?
+- Recommendation: keep blurb; fold lone app into "Applications & toys".
+- ANSWER: Keep =dungeoncrawl='s playful blurb; it lives in bucket 6
+  ("Data-wrangling / Toys"). No screenshot/GIF for now. No separate
+  "Rust applications" heading (folded into the domain scheme).
+*** Q6.7 Per-project detail pages, or single index with outbound links
+(current)?
+- Recommendation: single index, outbound links; detail pages only if a
+  project warrants a writeup (then it's a blog post).
+- ANSWER: *Single =/projects= index + outbound links.* No per-project
+  detail pages; a project that deserves a writeup becomes a blog post.
+*** Q6.8 Sort within a group: by significance (curated), alphabetical,
+or recency?
+- Recommendation: curated significance (most-useful first).
+- ANSWER: *Curated significance* (most-useful/strongest first) within
+  each bucket. Order tunable at impl time.
+*** Q6.9 Want a one-line "philosophy of these tools" header (LINUX "do
+one thing well" appears in your journal)?
+- Recommendation: yes — a short Unix-philosophy epigraph.
+- ANSWER: *Yes* — short original Unix-philosophy epigraph (small,
+  sharp, single-purpose tools); I draft in your voice, you edit.
+*** Q6.10 Include language/registry icons, or text-only (terminal vibe)?
+- Recommendation: text-only.
+- ANSWER: *Text-only*, no language/registry icons (terminal vibe).
+
+** §7 Writing / pre-prints page
+*** Q7.1 Is "Writing" = pre-prints only, or also notes/essays distinct
+from the blog?
+- Recommendation: =/writing= = formal artifacts (pre-prints, papers,
+  talks); informal goes to =/blog=.
+- ANSWER: *=/writing= = formal artifacts only* (pre-prints, papers,
+  talks). Informal/essayistic → =/blog=.
+*** Q7.2 GCM/LCM: give it a dedicated landing page (title, abstract,
+status, PDF embed/link, BibTeX, related crate =gcm-lcm=)?
+- Recommendation: yes — dedicated =/writing/gcm-lcm/=.
+- ANSWER: *No sub-page — a rich ENTRY on the =/writing= index.* Title,
+  abstract, status word, PDF link, BibTeX, cross-link to the =gcm-lcm=
+  crate, all inline on =/writing/index.html=. Removes the
+  =/writing/gcm-lcm/= dir (simplifies URL scheme; Q2.3 example dropped).
+*** Q7.3 Keep the self-deprecating "pre-pre-print" framing, or
+"working paper / draft"?
+- Recommendation: keep "pre-pre-print" — it's pure MWQ; add a small
+  status badge.
+- ANSWER: *Keep "pre-pre-print" + a small status badge.* The irony
+  stays.
+*** Q7.4 Host the PDF in-repo (current, =gcm-algorithm.pdf=, 356 KB) or
+elsewhere? Rename it to something stable/descriptive?
+- Recommendation: in-repo under =/writing/gcm-lcm/=; rename to
+  =gcm-lcm-draft.pdf=.
+- ANSWER: In-repo, served under =/writing/= (no sub-dir per Q7.2).
+  Rename =gcm-algorithm.pdf= → =gcm-lcm-draft.pdf= for a stable,
+  descriptive URL. Link updates to arXiv when endorsed.
+*** Q7.5 Provide a BibTeX/citation block and a "how to cite" line?
+- Recommendation: yes.
+- ANSWER: *Yes* — copyable BibTeX block + one-line "how to cite".
+*** Q7.6 Add a "status pipeline" visual (idea → draft → pre-print →
+arXiv → published) for works in progress?
+- Recommendation: yes — small textual pipeline; very on-theme (Sisyphus
+  + "sense of possibility").
+- ANSWER: *Just a status word* per work (e.g. "pre-pre-print"), not a
+  full pipeline graphic. Simpler.
+*** Q7.7 List works that don't exist yet as "planned/▢" (e.g. the
+"online algorithm" extension you mention), or only real artifacts?
+- Recommendation: a short "Forthcoming" list with no dates.
+- ANSWER: *No "Forthcoming" list* (not selected). Only real artifacts
+  on =/writing= for now. The online-algorithm extension can be
+  mentioned in the GCM entry prose if desired, but not as a list.
+*** Q7.8 Render math on this page (abstract may need it) — MathJax on
+=/writing= too?
+- Recommendation: yes, shared config.
+- ANSWER: *Yes* — MathJax on =/writing= (abstract needs it), via the
+  shared self-hosted load-on-demand config (Q3.8).
+
+** §8 Blog
+*** Q8.1 Does the blog launch with real posts, or as an empty scaffold?
+- Recommendation: launch with 1 seed essay; scaffold the rest.
+- ANSWER: *One seed essay at launch* (anchor #4); machinery scaffolded
+  for more.
+*** Q8.2 You write all posts, or do you want me to draft from approved
+topics for you to edit? (No verbatim journal content either way.)
+- Recommendation: I draft 1–2 from topics you approve; you edit to
+  voice.
+- ANSWER: *I draft from the approved topic; you edit to voice.* No
+  verbatim journal content (anchor #4).
+*** Q8.3 Approve seed topics (drawn from your journal's /themes/, not
+its text). Candidates:
+  1. "Why Python concurrency broke my Rust brain" (fork/spawn/ray).
+  2. "markitdown vs xan: a 48× lesson in taking memory seriously."
+  3. "Pre-pre-prints, or: one must imagine the draft happy" (Sisyphus +
+     shipping unfinished work).
+  4. "The sense of possibility in a half-finished compiler" (MWQ +
+     neurosymbolic =ai_function=).
+  5. "Reading the Zone: what Stalker taught me about debugging."
+- Recommendation: ship #3 as the seed; queue #2 and #1.
+- ANSWER (pick / veto / add): *Seed = #3 "Pre-pre-prints, or: one must
+  imagine the draft happy"* (Sisyphus + Musil; pairs with the =/writing=
+  pre-print; sets the intellectual tone). #2 (markitdown vs xan) and #1
+  (Python/Rust concurrency) queued as future drafts.
+*** Q8.4 Post metadata: date, tags, reading-time, last-updated,
+"epigraph"? Which?
+- Recommendation: date + tags + epigraph; skip reading-time.
+- ANSWER: *Date + tags + epigraph + reading-time* (all four). Keep
+  reading-time understated (small muted "~N min") to respect the
+  unhurried pacing. Single date is fine — it's post-count/gap signals
+  we avoid (Q15.4), not dates.
+*** Q8.5 Blog index ordering & paging: reverse-chronological list; need
+tags pages / archive by year?
+- Recommendation: reverse-chron flat list at launch; add tag pages when
+  >~15 posts.
+- ANSWER: *Default accepted:* reverse-chronological flat list at launch;
+  introduce tag pages / yearly archive only when post count grows
+  (~15+). Tags captured per-post now (Q8.4) so they're ready.
+*** Q8.6 Per-post features: footnotes (Org has them), code blocks with
+language labels (current CSS supports), TOC for long posts, "prev/next"?
+- Recommendation: footnotes + labeled code + prev/next; TOC only if
+  long.
+- ANSWER: *Footnotes + labeled code blocks + prev/next.* No per-post
+  TOC at launch (not selected; can add conditionally for long essays
+  later). Footnotes suit the essayistic register; labeled code uses the
+  existing =pre.src-*= CSS + htmlize Zone theme.
+*** Q8.7 Comments? (none / GitHub Discussions / Giscus / "email me")
+- Recommendation: none — "email me / open an issue" link instead.
+- ANSWER: *Email / open-an-issue link* at the foot of each post. No
+  comment system; zero JS, zero moderation; on-theme.
+*** Q8.8 Drafts workflow: keep unpublished posts in-repo (=draft:t=
+filtered out) or out-of-repo until ready?
+- Recommendation: in-repo with a =DRAFT= keyword excluded from publish
+  + sitemap.
+- ANSWER: *Default accepted:* drafts live in-repo; a =#+DRAFT:= /
+  =:DRAFT:= marker excludes them from publish, sitemap, and feed.
+  (Queued essays #1/#2 from Q8.3 sit here as drafts.)
+*** Q8.9 Code syntax highlighting: Org's =htmlize= (needs Emacs theme),
+a JS highlighter (highlight.js/Prism), or plain monospace?
+- Recommendation: =htmlize= with a custom Emacs theme matching "the
+  Zone" — maximally on-brand, no JS.
+- ANSWER: *htmlize + custom "the Zone" Emacs theme* (settled at §3).
+  Build-time, zero JS, colors match the site palette exactly.
+*** Q8.10 Tone guardrails: how personal? (career frustrations and the
+divorce appear in your journal — presumably off-limits.) Where's the
+line: technical-only, technical+philosophical, or also personal-life?
+- Recommendation: technical + philosophical; no personal-life specifics.
+- ANSWER: *Technical + philosophical.* May range into philosophical/
+  literary register, but HARD-OUT: no personal-life specifics (divorce,
+  health), no employer-internal material, no named colleagues, no
+  =*.amazon.com= links. Reaffirms Q1.5.
+
+** §9 Landing page & rearrangement of existing content
+*** Q9.1 Keep the tagline "The code says it best, but maybe you were
+looking for editorializing." verbatim?
+- Recommendation: keep — it's perfect and sets up the blog.
+- ANSWER: *Replace it.* The current tagline ("The code says it best…")
+  is retired. I will draft NEW landing copy. TODO (copywriting stage):
+  draft 3 options for the replacement primary line, in the terse-base/
+  absurdist register, unattributed. (Open whether the retired tagline
+  is preserved anywhere — see Q9.5 answer = redistribute all, so it is
+  NOT preserved unless you say otherwise.)
+*** Q9.2 Add a second epigraph in the Sisyphus/Solaris/Musil register
+(original, not a quote)? Want me to draft 3 options?
+- Recommendation: yes; I'll draft 3.
+- ANSWER: *Yes — I draft 3 options* for a second epigraph in the
+  absurdist/literary register, original and unattributed (no naming of
+  films/books, per Q11.5). Combined with Q9.1, the landing gets BOTH a
+  new primary line AND a second epigraph — I'll draft both sets and you
+  pick. Placement (both on landing vs. one held for =/about=) decided
+  at draft review.
+*** Q9.3 Landing layout: (a) shell-prompt + 4 links + modeline (sparse,
+recommended); (b) prompt + links + latest-3-blog-posts; (c) full TOC as
+now.
+- ANSWER: *(a) Sparse portal* — shell-prompt header + epigraph(s) +
+  terminal-style index to the sections + modeline footer. No latest-
+  posts list. Settled earlier at Q2.5.
+*** Q9.4 Show a "currently" / status line (last-updated, "now"
+one-liner)?
+- Recommendation: a single =last rebuilt: <date>= in the modeline.
+- ANSWER: *Single =last rebuilt: <date>= in the modeline footer*,
+  auto-set at build. No latest-posts list, no post counts (respects
+  Q15.4). This resolves Q9.3's "no (b)" too.
+*** Q9.5 What happens to the current single =index.html= content — fully
+superseded by =/projects= + =/writing=, correct?
+- Recommendation: yes; old content redistributed, nothing lost.
+- ANSWER: *Yes — redistribute all.* Julia/Rust/apps → =/projects=
+  (domain buckets); GCM/LCM "Writing" → =/writing=; old =index.html=
+  becomes the sparse portal. Nothing archived separately (git history
+  retains the old version). Retired tagline NOT preserved (see Q9.1).
+*** Q9.6 Keep MathJax on the landing page (it currently loads site-
+wide)? Landing likely needs no math.
+- Recommendation: load MathJax only on pages that need it.
+- ANSWER: *Load on demand only* — landing has NO math, so no MathJax on
+  =/=. Settled at Q3.8.
+
+** §10 Navigation, layout chrome, interaction
+*** Q10.1 Approve the shell-prompt header motif? Exact text format
+(=user@host:path $=)? What "host" — =zone=, =solaris=, hostname?
+- Recommendation: =andrew@zone:~/<section> $=.
+- ANSWER: *No shell prompt.* The header is a plain text breadcrumb/nav
+  instead. MAJOR consequence: the "terminal" identity now rests on the
+  modeline footer alone (Q10.2). Updates §I.2/§I.6/§I.5, which had
+  leaned on a prompt motif — those references are superseded.
+*** Q10.2 Approve the Emacs modeline footer? What does it display
+(buffer name = page, mode = Org, theme, last-build date)?
+- Recommendation: =-UUU:%%--F1  <page>.org  All  (Org)  the-Zone= +
+  build date.
+- ANSWER: *Stylized modeline* (evocative but readable), e.g.
+  =-UUU:----  projects.org   (Org)   the-Zone   rebuilt 2026-06-01=.
+  This is now THE signature chrome element (shell prompt dropped,
+  Q10.1). Shows: page name =.org=, =(Org)=, theme =the-Zone=, and
+  =rebuilt <date>= (the Q9.4 freshness line).
+*** Q10.3 Keyboard navigation (=j/k=, =g g/G=, =/=, =?=) — include at
+launch, defer, or skip (no-JS purity)?
+- Recommendation: include =j/k= + =/= + =?= as progressive enhancement;
+  fully usable without JS.
+- ANSWER: *Defer ALL keyboard nav to stage 2.* Launch ships plain
+  anchor/breadcrumb navigation only. =j/k=, =/= jump, =?= overlay all
+  arrive in stage 2 (bundled with the theme toggle / minibuffer work).
+  Lowest launch risk.
+*** Q10.4 A "minibuffer"-style command palette / fuzzy jump (=/= opens
+it) — yes/defer?
+- Recommendation: defer to stage 2; ship plain anchor nav first.
+- ANSWER: *Defer to stage 2* (consistent with Q10.3). Plain anchor nav
+  at launch; minibuffer command-palette / fuzzy jump in stage 2.
+*** Q10.5 Is any JavaScript acceptable, or hard no-JS? (Affects theme
+toggle, keyboard nav, MathJax.)
+- Recommendation: minimal, optional JS; site fully works with JS off.
+- ANSWER: *Minimal, optional JS.* Site fully usable with JS OFF (nav,
+  content, reading). JS only ENHANCES: stage-2 =/= jump, =j/k=, =?=,
+  theme toggle, and load-on-demand MathJax. At LAUNCH the only JS is
+  the MathJax loader on math pages — everything else is static.
+*** Q10.6 Mobile/responsive priority — equal to desktop, or
+desktop-first with graceful mobile?
+- Recommendation: responsive, single-column on narrow; chrome
+  (modeline/prompt) collapses gracefully.
+- ANSWER: *Accepted:* responsive, single-column on narrow; modeline
+  footer collapses/truncates gracefully on mobile. Desktop-first feel,
+  graceful mobile. (No prompt to worry about — Q10.1.)
+*** Q10.7 Motion: confirm "restraint only" (slow fades, no parallax/
+bounce/autoplay)?
+- Recommendation: yes; honor =prefers-reduced-motion=.
+- ANSWER: *Accepted:* restraint only — slow fades at most, no parallax/
+  bounce/autoplay; honor =prefers-reduced-motion= (also freezes the
+  film-grain, Q4.5).
+
+** §11 Voice & copy
+*** Q11.1 Overall register: terse-technical, dry-absurdist, or
+lyrical-literary? (Journal reads terse-technical with absurdist asides.)
+- Recommendation: terse-technical base, absurdist asides, rare lyrical
+  epigraphs.
+- ANSWER: *Terse base, dry absurdist asides, rare lyrical epigraphs* —
+  matches the journal.
+*** Q11.2 First person "I", second person "you" (journal uses both), or
+impersonal?
+- Recommendation: "I" for opinions, "you" for the reader, as journal.
+- ANSWER: *"I" for opinions, "you" for the reader* — as the journal
+  does ("welcome to my life", "you want this crate!").
+*** Q11.3 May I write new section blurbs in your voice for you to edit,
+or do you want to write every word?
+- Recommendation: I draft, you edit.
+- ANSWER: *I draft all new blurbs/copy in your voice; you edit.* (Final
+  word is always yours.)
+*** Q11.4 Profanity/edge level (journal has "mindf", "smh", "LOL")?
+- Recommendation: mild, sparing; no hard profanity on a public site.
+- ANSWER: *Keep the edge* — journal-level salt ("smh"-grade asides,
+  sharp call-outs of bad-faith practices), no hard profanity.
+  CONSTRAINT to reconcile with Q1.2 (recruiters/peers in audience) +
+  Q8.10: edge is aimed at things/practices/code, NEVER named people.
+  Sharp, not cruel.
+*** Q11.5 Use literal film/book references on the site (name STALKER
+etc.), or keep the vibe implicit/unattributed?
+- Recommendation: implicit in design; a single colophon line naming the
+  influences for those who look.
+- ANSWER: *Fully implicit.* The films/books are NEVER named anywhere —
+  not even the colophon. Vibe is purely felt. OVERRIDES the earlier
+  "colophon names influences" idea (affects §I.6 landing note, the
+  colophon in =/about=, and Q12). Colophon may name tools (Emacs, Org,
+  JuliaMono) but not the artistic influences.
+
+** §12 Metadata, SEO, syndication, analytics
+*** Q12.1 Real =<title>= and =<meta description>= per page (today's is
+the invisible =&lrm;=)?
+- Recommendation: yes — real titles; descriptions per page.
+- ANSWER: *Real =<title>= + per-page =<meta description>=.* Format
+  e.g. =Projects · Andrew Radcliffe=. Replaces the invisible =&lrm;=.
+  Consistent with full identity (Q1.3).
+*** Q12.2 Open Graph / Twitter cards (social previews)? Needs an OG
+image — make a JuliaMono-on-Zone card?
+- Recommendation: yes; generate one static OG card.
+- ANSWER: *One static site-wide OG card* — name + tagline in JuliaMono
+  on the dark palette; no naming of artistic influences (Q11.5).
+  + matching Twitter-card tags. (Per-page cards deferred.)
+*** Q12.3 RSS/Atom feed for the blog (=org-publish= can sitemap; feed
+needs a template)? Confirm =/feed.xml=.
+- Recommendation: yes — Atom at =/feed.xml=.
+- ANSWER: *Atom feed at =/feed.xml=* for the blog (excludes drafts,
+  Q8.8). No JSON feed (not selected).
+*** Q12.4 Analytics — none, privacy-friendly (GoatCounter/Plausible), or
+GitHub-traffic only?
+- Recommendation: none (on-theme: the Zone doesn't watch back); rely on
+  GitHub insights.
+- ANSWER: *None.* No analytics, no tracking scripts. GitHub insights if
+  curious. On-theme.
+*** Q12.5 =sitemap.xml= + =robots.txt=?
+- Recommendation: yes, both.
+- ANSWER: *Both* =sitemap.xml= + =robots.txt= (allow all, point to
+  sitemap).
+*** Q12.6 Favicon / icon — design one (a glyph in JuliaMono, e.g. =λ=,
+=∇=, =∂=, a boulder =●=)?
+- Recommendation: a single JuliaMono glyph favicon; propose 3.
+- ANSWER: *=λ= (lambda)* favicon, rendered in JuliaMono on the dark
+  palette. Leans into the Emacs/Lisp/functional identity. Provide
+  =.ico= + =.svg= + apple-touch sizes.
+
+** §13 Accessibility, performance, compatibility
+*** Q13.1 Accessibility target: WCAG AA (recommended)? Keyboard-operable,
+focus-visible, skip-link, alt text, semantic landmarks?
+- Recommendation: AA + all of the above.
+- ANSWER: *WCAG AA + full keyboard operability.* AA body contrast
+  (Q4.6), visible focus rings, skip-link, alt text (photo + OG image),
+  semantic landmarks (=<nav>=, =<main>=, =<footer>=).
+*** Q13.2 Performance budget: e.g. ≤100 KB/page excl. fonts, fonts
+subset, no render-blocking JS?
+- Recommendation: yes; lazy-load MathJax; subset fonts.
+- ANSWER: *Accepted:* per-page budget ≤100 KB excluding fonts; fonts
+  subset to woff2; no render-blocking JS; MathJax load-on-demand only
+  (Q3.8). Note: JuliaMono 4 weights + serif 2 styles is the main
+  weight — subsetting matters (Q5.2/5.3).
+*** Q13.3 Browser support floor (modern evergreen only, or older)?
+- Recommendation: modern evergreen; graceful degradation, no IE.
+- ANSWER: *Accepted:* modern evergreen browsers; graceful degradation;
+  no IE. CSS custom properties + grid assumed available.
+*** Q13.4 Print stylesheet (the pre-print page especially)?
+- Recommendation: a simple print sheet (light bg, hide chrome).
+- ANSWER: *Accepted:* simple print stylesheet — light background, dark
+  text, hide nav/modeline/grain; matters most for =/writing= and blog
+  essays.
+
+** §14 Domain, hosting, deployment
+*** Q14.1 Stay on =andrewjradcliffe.github.io=, or add a custom domain
+(=CNAME=)?
+- Recommendation: stay on github.io for now; design so a custom domain
+  is a one-line change.
+- ANSWER: *Stay on =andrewjradcliffe.github.io=.* Design for a one-line
+  custom-domain switch later (root-relative links + configurable base).
+*** Q14.2 Keep absolute vs. root-relative links (custom domain & local
+preview both work)?
+- Recommendation: root-relative (=/projects/=) with a configurable base.
+- ANSWER: *Root-relative links* (=/projects/=) with a configurable base
+  var, so github.io, a custom domain, and local =make serve= all work.
+*** Q14.3 GitHub Pages source: =main= branch =/= , =/docs=, or
+=gh-pages= / Actions artifact?
+- Recommendation: Actions artifact (ties to Q3.4/Q3.5).
+- ANSWER: *Pages-from-Actions artifact* (ties to Q3.4/Q3.5). =main=
+  stays source-only; no =/docs= dir, no =gh-pages= branch of built HTML.
+*** Q14.4 Keep =.~undo-tree~= and other Emacs cruft out via =.gitignore=
+(several are currently committed/untracked)?
+- Recommendation: add =.gitignore= for =*.~undo-tree~=, =public/=,
+  build artifacts.
+- ANSWER: *Yes — =.gitignore= + =README.org=.* Ignore =*.~undo-tree~=,
+  =/public/=, =*.elc=, other build artifacts. =README.org= documents
+  the =make= targets + build/deploy. Working docs (=prompt.org=,
+  =spec.org=) move to a tracked =/notes= dir, excluded from publish
+  (Q15-related). Stage-1 task.
+
+** §15 Maintenance & content workflow
+*** Q15.1 How will you add a blog post — new =.org= in =blog/= + =make
+publish=? Want a =new-post= helper script/snippet?
+- Recommendation: =org-capture= template or =scripts/new-post.sh=.
+- ANSWER: *Helper script + data list.* =scripts/new-post.sh= (or
+  =make new-post TITLE=...=) scaffolds a dated =.org= from a template;
+  a single =projects.org= list you append project entries to. Both
+  documented in =README.org=.
+*** Q15.2 How will you add a project — edit one data list, or hand-write
+HTML/Org each time?
+- Recommendation: a single =projects.org= list you append to.
+- ANSWER: *Single =projects.org= list* you append to (one entry per
+  project, with the metadata fields from Q6.2). Settled with Q15.1.
+*** Q15.3 Do you want a =CONTRIBUTING=/=README= describing the build so
+future-you remembers?
+- Recommendation: yes — short =README.org= with =make= targets.
+- ANSWER: *Yes* — =README.org= documenting =make= targets, the build/
+  deploy flow, the pinned Emacs/Org versions (Q3.7), and how to add a
+  post/project. Settled with Q14.4.
+*** Q15.4 Cadence expectation (so the design doesn't imply staleness if
+you post rarely)?
+- Recommendation: no visible post counts/dates implying cadence; "last
+  rebuilt" only.
+- ANSWER: *Accepted:* no visible post counts or cadence signals; only
+  the per-post date (Q8.4) and the modeline "rebuilt <date>" (Q9.4).
+  Design must not look stale if you post rarely.
+
+** §16 Project process (how WE execute this)
+*** Q16.1 After you answer, do you want a single big PR, or staged PRs
+per §I.4 stage?
+- Recommendation: staged PRs (theme/IA → projects/writing → blog/RSS).
+- ANSWER: *Staged, but direct commits to =main= (no PRs)* per Q16.2.
+  Stage order: (1) pipeline+theme+IA+projects+writing, (2) blog+seed
+  essay+feed, (3) about+uses+OG+a11y polish, (4) stage-2 JS niceties
+  (toggle, =/= jump, =j/k=, =?=). See Q16.5 — staged commits + live
+  deploy on each push raises the "half-built site goes live" question.
+*** Q16.2 Should I work on a branch (not =main=) and open PRs for review?
+- Recommendation: yes — feature branch + PRs.
+- ANSWER: *Direct commits to =main=* (no feature branch, no PRs).
+  Fastest. Trade-off: no review gate; reconcile with live-deploy
+  exposure at Q16.5.
+*** Q16.3 Do you want visual previews (screenshots / a local =make serve=
+URL) at each stage before merge?
+- Recommendation: yes — screenshot per stage.
+- ANSWER: *Screenshots per stage* via =make serve=. NOTE: with direct-
+  to-main commits (Q16.2), these are post-commit review checkpoints,
+  not pre-merge gates.
+*** Q16.4 Anything in this document you want me to expand into its own
+sub-spec before planning (e.g. the Emacs "the Zone" htmlize theme)?
+- ANSWER: *Expand all three sub-specs before the plan:* (A) the "Zone"
+  Emacs htmlize theme, (B) CSS design tokens, (C) the org-publish
+  project. Written as Part 0 below; the plan references them.
+*** Q16.5 [follow-up] Reconcile direct-to-main commits with live deploy.
+- ANSWER: *Build all, deploy once.* Stages commit directly to =main=;
+  the deploy Action does NOT run on every push — it triggers only on a
+  release TAG (e.g. =v1=). CI may build (validate) on push, but Pages
+  publishes only on the tag. The live site stays on the current page
+  until the finished site flips once. Resolves the Q16.2×Q3.4 conflict.
+
+----------------------------------------------------------------------
+
+* PART 0 — Sub-specs (expanded per Q16.4)
+These three are referenced by the plan. Read before Part III.
+
+** Sub-spec A — "the Zone" Emacs htmlize theme
+:PROPERTIES:
+:GOAL: A custom Emacs theme whose face colors match §I.4, used by htmlize at build time to color all code blocks (Q3 highlighting, Q8.9).
+:END:
+- Mechanism: =org-html-htmlize-output-type= = =css= would emit class
+  names; instead use ='inline-css= so colors are baked per-span and the
+  page needs no external htmlize stylesheet. Decision: use =css= output
+  + a single committed =htmlize.css= so spans stay small and themable.
+- Theme file: =site/zone-theme.el= defining =deftheme zone= and
+  =custom-theme-set-faces= for the faces htmlize actually serializes:
+  | face                        | color        | role               |
+  |-----------------------------+--------------+--------------------|
+  | =default=                   | fg #c8c2b6   | base code text     |
+  | =font-lock-keyword-face=    | amber #c8923d| =fn=, =let=, =if=  |
+  | =font-lock-function-name-face= | teal #4e8d86 | defined names   |
+  | =font-lock-string-face=     | #8a9b6e      | string literals    |
+  | =font-lock-comment-face=    | muted #7c8079| comments           |
+  | =font-lock-constant-face=   | rust #a44f3e | numbers/constants  |
+  | =font-lock-type-face=       | #b9863d      | types              |
+  | =font-lock-variable-name-face= | fg #c8c2b6| variables          |
+  | =font-lock-builtin-face=    | #6f9d8f      | builtins/macros    |
+  | =font-lock-preprocessor-face= | rust       | attrs/cfg/derive   |
+- Languages to verify render: Rust, Julia, Python, shell, Org, text.
+- Load order in batch: require the lang major modes so font-lock is
+  populated before htmlize runs (=rust-mode=/=rust-ts-mode=,
+  =julia-mode=, =python=, =sh-script=). If a mode is unavailable in CI,
+  fall back to =prog-mode= fontification (degrades, doesn't break).
+- Verifiable result: a fixture =site/fixtures/highlight-test.org= with
+  one block per language exports to HTML whose spans carry the expected
+  hex colors (grep for =#c8923d= in the Rust =fn= keyword span).
+
+** Sub-spec B — CSS design tokens
+:PROPERTIES:
+:GOAL: One committed css/style.css using custom properties, the single source of visual truth (Q3.2/Q3.3 self-contained).
+:END:
+- Color tokens (=:root=), dark "the Zone" (Q4.2):
+  =--bg:#0e1110; --bg-alt:#161a18; --fg:#c8c2b6; --fg-muted:#7c8079;
+  --amber:#c8923d; --rust:#a44f3e; --teal:#4e8d86;=
+  Link tokens: =--link:var(--teal); --link-hover:var(--amber);
+  --link-visited:var(--rust);= (Q4.4)
+- Light "Sepia" tokens go behind =:root[data-theme="sepia"]= and a
+  =@media (prefers-color-scheme: light)= block — authored in STAGE 2
+  (Q4.3); leave a commented stub now.
+- Type tokens (Q5.4): =--font-mono: "JuliaMono", ui-monospace,
+  "Cascadia Code", Menlo, Consolas, monospace; --font-serif: "EB
+  Garamond", Georgia, "Times New Roman", serif; --fs-base: 18px;
+  --lh-base: 1.6; --measure: 68ch;= Scale 1.25 (Q5.7):
+  =--fs-h1 … --fs-h4= as multiples.
+- Serif applies ONLY to =.post-body p, .post-body li= (Q5.8); global
+  default is =--font-mono=.
+- Ligatures OFF globally (Q5.5): =font-feature-settings:"liga" 0,"calt"
+  0;= (code blocks inherit; literal =->=).
+- Grain (Q4.5): a =body::after= overlay, =opacity:.02=, tiling SVG
+  =feTurbulence= data-URI, =pointer-events:none=; suppressed under
+  =@media (prefers-reduced-motion: reduce)=.
+- Modeline (Q10.2): =.modeline= styled in =--bg-alt= with =--fg-muted=,
+  monospace, =--fw: 500= (Medium), full-width footer bar.
+- Focus/skip-link/AA (Q13.1): =:focus-visible{outline:2px solid
+  var(--amber)}=; =.skip-link= visible on focus.
+- Print (Q13.4): =@media print= → white bg, black text, hide =.nav=,
+  =.modeline=, grain.
+- Verifiable result: =public/css/style.css= exists; a contrast check of
+  =--fg= on =--bg= ≥ 4.5:1 (compute; #c8c2b6 on #0e1110 ≈ 9.6:1, passes).
+
+** Sub-spec C — org-publish project
+:PROPERTIES:
+:GOAL: publish.el defining org-publish components that build the multi-page site to public/ (Q3.1).
+:END:
+- Source tree (in repo, =main= source-only):
+  =src/index.org=, =src/projects.org=, =src/writing.org=,
+  =src/about.org=, =src/uses.org=, =src/blog/*.org=,
+  =css/=, =fonts/=, =js/= (mathjax loader only at launch),
+  =img/= (photo, OG card, favicon), =site/= (publish.el, theme, setup).
+- =org-publish-project-alist= components:
+  1. =zone-pages= — the static =.org= pages → =public/=, recursive,
+     =org-html-publish-to-html=, shared =setupfile.org=.
+  2. =zone-blog= — =src/blog/= → =public/blog/=, with a sitemap function
+     generating =public/blog/index.html= (reverse-chron, Q8.5) and
+     EXCLUDING entries tagged =:DRAFT:= (Q8.8).
+  3. =zone-static= — =css/ fonts/ js/ img/= copied verbatim to =public/=.
+  4. =zone= — meta-component aggregating 1–3.
+- Feed (Q12.3): =zone-blog= sitemap also writes =public/feed.xml= (Atom)
+  from published (non-draft) posts via a custom function.
+- Draft filter: =:exclude= regex + a per-file check of =#+DRAFT:= /
+  =:DRAFT:= in the sitemap + feed function (one helper, used by both).
+- Base URL (Q14.2): =org-html-link-org-files-as-html= + a
+  =site-base-url= var defaulting to ="/"=; CI can override.
+- MathJax load-on-demand (Q3.8/Q7.8): pages set
+  =#+HTML_HEAD_EXTRA= to include =js/mathjax-loader.js= only when they
+  contain math (a =#+MATH: t= keyword the setup reads; default off).
+- Verifiable result: =emacs --batch -l site/publish.el -f
+  org-publish-all= exits 0 and produces =public/index.html=,
+  =public/projects/index.html=, =public/writing/index.html=,
+  =public/blog/index.html=, =public/feed.xml=, =public/about/index.html=,
+  =public/uses/index.html=.
+
+----------------------------------------------------------------------
+
+* PART III — Implementation plan
+:PROPERTIES:
+:RULE: Each leaf bullet ≤10 min and has a verifiable result (V:). Checkbox = done-when-verified. Stages commit to =main=; deploy only at the =v1= tag (Q16.5). Screenshots after each stage (Q16.3).
+:END:
+
+** Stage 0 — Repo hygiene & skeleton  [0/8]
+- [ ] Create =/notes/= and =git mv prompt.org spec.org notes/= (Q13/Q14).
+  V: =git status= shows moved; =ls notes/= lists both.
+- [ ] Add =.gitignore=: =*.~undo-tree~=, =/public/=, =*.elc=,
+  =.DS_Store=, =/.org-timestamps/= (Q14.4).
+  V: =git status --ignored= shows the =.~undo-tree~= files ignored.
+- [ ] Create source tree dirs =src/ src/blog/ css/ fonts/ js/ img/
+  site/ site/fixtures/= (Sub-spec C).
+  V: =find src css fonts js site -type d= lists all 8.
+- [ ] Move existing content into source: =git mv index.org src/= and
+  copy =gcm-algorithm.pdf img/= → rename =gcm-lcm-draft.pdf= (Q7.4).
+  V: =ls src/index.org img/gcm-lcm-draft.pdf=.
+- [ ] Write =site/setupfile.org= (shared =#+OPTIONS=, =#+HTML_HEAD= for
+  css/font links, no MathJax by default) (Sub-spec C).
+  V: file exists; references =/css/style.css=.
+- [ ] Write =README.org= stub: build overview + placeholder make targets
+  (Q15.3). V: file exists with a "Build" heading.
+- [ ] Write =Makefile= with =publish=, =serve=, =clean= targets (stubs
+  calling emacs/python http.server) (Q3.6).
+  V: =make -n publish= prints the emacs batch command.
+- [ ] Commit: "scaffold: source tree, gitignore, notes, make targets".
+  V: =git log -1 --stat= shows the moves + new files.
+
+** Stage 1 — Pipeline + theme + IA + projects + writing  [0/24]
+*** 1a. org-publish backbone (Sub-spec C)  [0/6]
+- [ ] Write =site/publish.el= with =zone-static= component only; build.
+  V: =make publish= copies =css/ fonts/ js/ img/= into =public/=.
+- [ ] Add =zone-pages= component (src =.org= → =public/=).
+  V: a one-line =src/index.org= renders to =public/index.html=.
+- [ ] Wire =setupfile.org= into pages via =#+SETUPFILE=.
+  V: =public/index.html= =<head>= links =/css/style.css=.
+- [ ] Add =site-base-url= var + root-relative link handling (Q14.2).
+  V: links in output start with =/=; =make serve= page nav works.
+- [ ] Add =make serve= (python =http.server= on =public/=, port 8000).
+  V: =curl -sI localhost:8000/ | head -1= → =200 OK=.
+- [ ] Commit "feat: org-publish backbone + static assets".
+*** 1b. Fonts + CSS tokens (Sub-spec B)  [0/6]
+- [ ] Download JuliaMono Regular/Bold/Italic/Medium + EB Garamond
+  Regular/Italic; subset to woff2 into =fonts/= (Q5.2/5.3).
+  V: =ls fonts/*.woff2= = 6 files; each < 200 KB after subsetting.
+- [ ] Write =@font-face= blocks (=font-display:swap=) in =css/style.css=.
+  V: =public/css/style.css= contains 6 =@font-face=.
+- [ ] Add color + type + link tokens to =:root= (Sub-spec B).
+  V: grep =--amber:#c8923d= and =--measure:68ch= present.
+- [ ] Add base element styles (body, headings scale 1.25, links w/
+  hover+visited, =--measure= on main, ligatures off).
+  V: rendered =/= shows JuliaMono, teal links, ~68ch column.
+- [ ] Add grain overlay + =prefers-reduced-motion= suppression (Q4.5).
+  V: =body::after= present; reduced-motion media query hides it.
+- [ ] Commit "feat: self-hosted fonts + Zone design tokens".
+*** 1c. Chrome: nav breadcrumb + modeline (Q10.1/10.2)  [0/4]
+- [ ] Build the plain-text breadcrumb nav partial (no shell prompt);
+  include via setupfile =#+HTML_HEAD_EXTRA= or preamble.
+  V: every page top shows =Andrew Radcliffe / projects= style nav.
+- [ ] Build the modeline footer partial (page=.org, =(Org)=, =the-Zone=,
+  =rebuilt <date>=); date injected at build (Q3.7 stamping).
+  V: =public/index.html= footer shows today's build date.
+- [ ] Add skip-link + =<nav>/<main>/<footer>= landmarks + focus styles
+  (Q13.1). V: keyboard Tab reveals skip-link; focus ring amber.
+- [ ] Commit "feat: breadcrumb nav + modeline footer + a11y landmarks".
+*** 1d. htmlize "Zone" code theme (Sub-spec A)  [0/4]
+- [ ] Write =site/zone-theme.el= face mapping; load in =publish.el=
+  batch + set =org-html-htmlize-output-type 'css= + emit =htmlize.css=.
+  V: =site/fixtures/highlight-test.org= exports; Rust =fn= span = amber.
+- [ ] Verify Julia/Python/shell blocks fontify (require modes in batch).
+  V: each language's keyword span carries a theme hex (grep).
+- [ ] Style =pre.src= block container in =--bg-alt= with the existing
+  =pre.src-*= language labels (Q8.6) restyled to the palette.
+  V: a code block shows the language label top-right on hover.
+- [ ] Commit "feat: Zone htmlize theme for code blocks".
+*** 1e. Projects page (§6)  [0/4]
+- [ ] Author =src/projects.org=: Unix-philosophy epigraph (Q6.9, draft)
+  + 6 domain buckets (Q6.5 assignment) with the 14 curated blurbs
+  verbatim (Q6.3), language tag + version + license + links (Q6.2).
+  V: =public/projects/index.html= lists 14 projects under 6 headings.
+- [ ] Mark =LogExpFunctionsExt.jl= "merged upstream" inline (Q6.4).
+  V: its entry shows the merged badge + link to LogExpFunctions.jl.
+- [ ] Real =<title>= + =<meta description>= for the page (Q12.1).
+  V: =<title>Projects · Andrew Radcliffe</title>= present.
+- [ ] Commit "feat: projects page, domain-grouped".
+*** 1f. Writing page (§7)  [0/3 — note count]
+- [ ] Author =src/writing.org=: GCM/LCM rich entry — title, abstract
+  (MathJax on), "pre-pre-print" status word (Q7.3/7.6), link to
+  =img/gcm-lcm-draft.pdf=, BibTeX + how-to-cite (Q7.5), cross-link to
+  the =gcm-lcm= crate. Enable =#+MATH: t= for on-demand MathJax.
+  V: =public/writing/index.html= renders the abstract math + PDF link.
+- [ ] Add =js/mathjax-loader.js= (self-hosted MathJax, load-on-demand).
+  V: =/writing= loads MathJax; =/= and =/projects= do NOT (view-source).
+- [ ] Commit "feat: writing page + on-demand MathJax". Then SCREENSHOT
+  stage 1 (Q16.3): =/=, =/projects=, =/writing=.
+
+** Stage 2 — Blog + seed essay + feed  [0/10]
+- [ ] Add =zone-blog= component + reverse-chron sitemap → =blog/index=
+  (Sub-spec C). V: empty =public/blog/index.html= builds.
+- [ ] Draft-filter helper (=:DRAFT:=) used by sitemap + feed (Q8.8).
+  V: a file tagged DRAFT is absent from =blog/index.html=.
+- [ ] Atom =feed.xml= generator over non-draft posts (Q12.3).
+  V: =public/feed.xml= validates (W3C feed validator / =xmllint=).
+- [ ] Blog post template + =scripts/new-post.sh= / =make new-post=
+  (Q15.1). V: =make new-post t="x"= creates a dated draft =.org=.
+- [ ] Post layout: date + tags + epigraph + muted reading-time (Q8.4);
+  footnotes + prev/next + email/issue footer (Q8.6/8.7).
+  V: a test post shows all five metadata + a working prev/next.
+- [ ] Apply serif to =.post-body= only (Q5.8).
+  V: post paragraphs render EB Garamond; headings stay JuliaMono.
+- [ ] DRAFT the seed essay "Pre-pre-prints, or: one must imagine the
+  draft happy" (Q8.3) — I write, original, audited against Q1.5/Q8.10.
+  V: =src/blog/2026-..-draft-happy.org= exists, no excluded content.
+- [ ] You edit the seed essay to voice; remove DRAFT tag to publish.
+  V: it appears in =blog/index.html= + =feed.xml=.
+- [ ] Queue essays #1 (Python/Rust) + #2 (markitdown/xan) as DRAFT stubs
+  (Q8.3). V: present in =src/blog/=, excluded from output.
+- [ ] Commit + SCREENSHOT stage 2: =/blog=, the seed post.
+
+** Stage 3 — About + uses + identity + OG + SEO + a11y polish  [0/12]
+- [ ] Author =src/about.org=: bio, plain photo =img/= (Q1.3b, alt text),
+  contact = email + GitHub + Scholar/ORCID (Q1.3a), tools-only colophon
+  (Q11.5 — no influence names). V: =/about= shows photo + 3 contacts.
+- [ ] Obfuscate email against scrapers (entity-encode or JS-free trick).
+  V: raw =mailto:= not present verbatim in HTML source.
+- [ ] Author =src/uses.org=: tools/setup list (Q2.2), JuliaMono voice.
+  V: =public/uses/index.html= renders.
+- [ ] Draft 3 landing primary-line options + 3 second-epigraph options
+  (Q9.1/9.2), original + unattributed; you pick.
+  V: chosen lines placed in =src/index.org=; landing is sparse portal.
+- [ ] Finalize landing: epigraph(s) + terminal-style index to the 6
+  areas + modeline (Q9.3). V: =/= shows index links to all sections.
+- [ ] Generate the =λ= favicon in JuliaMono on =--bg= (Q12.6): =.ico=,
+  =.svg=, =apple-touch-icon.png=; link in =<head>=.
+  V: =curl -sI localhost:8000/favicon.ico= → 200; tab shows λ.
+- [ ] Generate static OG card (name + tagline, JuliaMono on Zone, no
+  influence names) → =img/og.png=; add OG + Twitter meta (Q12.2).
+  V: =<meta property="og:image">= resolves; card renders 1200×630.
+- [ ] Per-page =<title>= + =<meta description>= across all pages (Q12.1).
+  V: each =public/**/index.html= has a unique non-empty title.
+- [ ] =sitemap.xml= + =robots.txt= (allow all → sitemap) (Q12.5).
+  V: both exist in =public/=; robots references the sitemap URL.
+- [ ] Print stylesheet (Q13.4). V: print-preview of =/writing= = light
+  bg, no nav/modeline/grain.
+- [ ] a11y sweep: alt text, landmarks, contrast spot-check, focus order
+  (Q13.1). V: =pa11y= / Lighthouse a11y ≥ 95 on =/=, =/writing=, post.
+- [ ] Commit + SCREENSHOT stage 3: =/about=, =/uses=, final =/=.
+
+** Stage 4 — Deploy automation + stage-2 JS niceties  [0/9]
+- [ ] Write =.github/workflows/build.yml=: on push to =main=, pinned
+  Emacs+Org (Q3.7), run =org-publish-all=, upload =public/= artifact —
+  but DO NOT deploy (Q16.5). V: Action runs green on a push; artifact
+  attached; Pages unchanged.
+- [ ] Add deploy job gated on =on: push: tags: ['v*']= → deploy-pages
+  (Q16.5/Q14.3). V: workflow file shows the tag-gated deploy job.
+- [ ] Configure repo Pages source = GitHub Actions (one-time setting).
+  V: Settings → Pages shows "GitHub Actions".
+- [ ] Theme toggle (dark/Sepia) + =prefers-color-scheme= + localStorage
+  (Q4.1/4.3); author the Sepia token block (Sub-spec B stub).
+  V: toggle flips =data-theme=; choice persists on reload; JS-off = dark.
+- [ ] =/= minibuffer command-palette / fuzzy jump on =/= (Q2.4/10.4).
+  V: pressing =/= opens jump; Enter navigates; JS-off = no error.
+- [ ] =j/k= scroll + =gg/G= + =?= help overlay (Q10.3), progressive.
+  V: keys work with JS on; page fully usable with JS off.
+- [ ] Finalize =README.org= (make targets, deploy-by-tag, add-post/
+  add-project, pinned versions) (Q15.3). V: README documents =v1= tag
+  deploy + =make new-post=.
+- [ ] Pre-flight: full =make clean publish=, link-check, feed + sitemap
+  validate, Lighthouse perf (Q13.2 budget). V: no broken links; perf
+  ≥ 90; each page ≤ 100 KB excl. fonts.
+- [ ] Tag =v1= → live deploy flips once, complete (Q16.5).
+  V: =https://andrewjradcliffe.github.io/= serves the new multi-page
+  site; old single page gone; all 6 sections + feed reachable.
+
+** Deferred / explicitly out of scope (logged, not dropped — Q-refs)
+- Light "Sepia" theme authored in Stage 4 only (Q4.3).
+- =/now=, =/reading= pages (Q2.2).
+- Per-project detail pages; per-page OG cards (Q6.7/Q12.2).
+- "Forthcoming" list on =/writing= (Q7.7).
+- Tag pages / yearly archive until ~15+ posts (Q8.5).
+- Comments system; analytics (Q8.7/Q12.4).
+- Custom domain (Q14.1) — one-line change when wanted.
+- Surfacing =anytomd-rs=/=bevy=/=gastown= (Q6.5).

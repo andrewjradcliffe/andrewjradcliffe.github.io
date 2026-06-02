@@ -1,0 +1,42 @@
+* Personal site overhaul
+This Org-mode file is exported to HTML; The resultant =index.html=
+forms the website https://andrewjradcliffe.github.io/. The repository
+is the special repository,
+https://github.com/andrewjradcliffe/andrewjradcliffe.github.io.
+
+To clarify my thinking, I need you to ask questions sufficient to
+design an improved personal website, taking inspiration and
+personality (but not verbatim content) from my journal
+(=/home/ANT.AMAZON.COM/aradclf/projects/org-projects/org-lsg/journal-2026.org=).
+
+Propose:
+- themes (color/layout, multiple pages, etc.)
+- rearrangement of existing content
+- font (preferably JuliaMono where applicable)
+
+New components of personal site:
+- blog
+- open source projects
+- pre-prints
+
+The vibes for the website are a mixture of:
+- [[https://en.wikipedia.org/wiki/Stalker_(1979_film)][Stalker]]
+- [[https://en.wikipedia.org/wiki/Solaris_(1972_film)][Solaris]]
+- [[https://en.wikipedia.org/wiki/The_Man_Without_Qualities][The Man Without Qualities]]
+- [[https://en.wikipedia.org/wiki/The_Myth_of_Sisyphus][The Myth of Sisyphus]]
+- Emacs
+- Linux
+
+Create a list of open questions which must be
+answered to reach a complete specification. The implementation plan
+for the specification should be granular, and actionable, and
+structured. Each bullet point in the nested plan should take no more
+than 10 minutes of implementation time and should have verifiable
+results. Before creating the implementation plan, you must ask
+questions on every section and each bullet within each section of the
+specification. You must not be lazy.
+
+** Extra
+*** 1
+- Scholar id: https://scholar.google.com/citations?user=2CHr3mEAAAAJ&hl=en&oi=ao
+- ORCID: 0000-0002-8817-0383

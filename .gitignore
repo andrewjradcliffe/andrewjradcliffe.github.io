@@ -1,0 +1,13 @@
+# Emacs
+*.~undo-tree~
+*.elc
+*~
+\#*\#
+.\#*
+
+# Build output (site is built by CI; main stays source-only)
+/public/
+/.org-timestamps/
+
+# OS
+.DS_Store

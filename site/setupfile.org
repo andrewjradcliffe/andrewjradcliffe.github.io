@@ -1,0 +1,14 @@
+# Shared export setup for all "the Zone" pages.
+# Included by every source page via:  #+SETUPFILE: ../site/setupfile.org
+#
+# Suppresses Org's default inline CSS and postamble; the site's look is
+# owned by /css/style.css and a publish.el-supplied preamble/postamble.
+
+#+LANGUAGE: en
+#+OPTIONS: toc:nil num:nil author:nil timestamp:nil ^:{} html-style:nil
+#+OPTIONS: html-postamble:nil html-preamble:t
+#+HTML_DOCTYPE: html5
+
+#+HTML_HEAD: <meta name="viewport" content="width=device-width, initial-scale=1" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/css/style.css" />
+#+HTML_HEAD: <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
