@@ -10,21 +10,41 @@ The full design specification and implementation plan live in
 * Build
 The site builds with =emacs --batch= driving =site/publish.el=.
 
-| Target         | Effect                                              |
-|----------------+-----------------------------------------------------|
-| =make publish= | Build the whole site into =public/=.                |
-| =make serve=   | Build, then serve =public/= on http://localhost:8000 |
-| =make clean=   | Remove =public/= and Org timestamp cache.           |
+| Target                    | Effect                                          |
+|---------------------------+-------------------------------------------------|
+| =make publish=            | Build the whole site into =public/=.            |
+| =make serve=              | Build, then serve on http://localhost:8000      |
+| =make clean=              | Remove =public/= and the Org timestamp cache.   |
+| =make new-post t="Title"= | Scaffold a dated draft under =src/blog/=.       |
 
-Requires Emacs (with Org) on =PATH=. Pinned versions for reproducible
-builds are documented here once CI is wired (Stage 4).
+Requires Emacs (with Org) and =python3= on =PATH=. Build dependencies
+(=htmlize=, =julia-mode=, a trimmed MathJax) are vendored under
+=site/lib/= and =js/mathjax/= — no network needed at build time.
 
 * Deploy
-Pushes to =main= are built (validated) by CI but *not* published.
-The live site is deployed only when a =v*= tag is pushed, so the
-site flips once, complete.
+CI (=.github/workflows/build.yml=) builds and validates on every push
+to =main= but does *not* publish. The live site deploys only when a
+=v*= tag is pushed:
+
+#+begin_src bash
+git tag v1.2.0 -m "release notes"
+git push origin v1.2.0       # -> Actions builds, then deploys to Pages
+#+end_src
+
+This keeps half-built states off the live site; it flips once, complete.
 
 * Adding content
-- *Blog post*: =make new-post t="Some title"= scaffolds a dated draft
-  under =src/blog/= (Stage 2).
-- *Project*: append one entry to =src/projects.org= (Stage 1).
+- *Blog post*: =make new-post t="Some title"= → edit the new
+  =src/blog/<date>-<slug>/index.org=; remove the =#+DRAFT: t= line to
+  publish. Posts with =#+DRAFT: t= are excluded from the index, the
+  Atom feed, and prev/next.
+- *Project*: append one entry to =src/projects/index.org= under the
+  appropriate domain bucket (language tag · version · license · links).
+- *Math*: add =#+MATH: t= to a page's header to load MathJax on demand.
+
+* Layout
+- =src/= — Org sources; each section is =src/<name>/index.org=.
+- =css/ fonts/ js/ img/= — static assets, copied verbatim to =public/=.
+- =site/= — =publish.el= (the build), =setupfile.org= (shared head),
+  =zone-theme= bits, and vendored =lib/=.
+- =notes/= — the spec and working docs (never published).

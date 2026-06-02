@@ -13,20 +13,14 @@ Julia, occasionally in whatever the problem demands. I like small,
 correct tools and proofs that fit in the head.
 
 This site collects the open-source work, the occasional pre-print, and
-a blog where I think out loud. None of it is finished; see the [[/blog/imagine-the-draft-happy/][first post]]
+a blog where I think out loud. None of it is finished; see the [[/blog/2026-06-01-imagine-the-draft-happy/][first post]]
 for why I consider that a feature.
 
 * Contact
-- Email: =andrew= /at/ =the obvious place= — see below
+- Email: =andrewjradcliffe [at] gmail [dot] com=
 - GitHub: [[https://github.com/andrewjradcliffe][@andrewjradcliffe]]
 - Google Scholar: [[https://scholar.google.com/citations?user=2CHr3mEAAAAJ][profile]]
 - ORCID: [[https://orcid.org/0000-0002-8817-0383][0000-0002-8817-0383]]
-
-#+begin_export html
-<p class="email">Reach me at
-<a class="addr"
-   href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#97;&#110;&#100;&#114;&#101;&#119;&#106;&#114;&#97;&#100;&#99;&#108;&#105;&#102;&#102;&#101;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">&#97;&#110;&#100;&#114;&#101;&#119;&#106;&#114;&#97;&#100;&#99;&#108;&#105;&#102;&#102;&#101;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a>.</p>
-#+end_export
 
 * Colophon
 Built in Emacs, exported from Org mode, set in [[https://juliamono.netlify.app/][JuliaMono]] (with

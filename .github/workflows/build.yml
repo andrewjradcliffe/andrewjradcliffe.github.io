@@ -1,0 +1,65 @@
+name: build & deploy
+
+# Build (validate) on every push to main, but DO NOT deploy.
+# Deploy to Pages only when a v* tag is pushed, so the live site
+# flips once, complete (see notes/spec.org Q16.5).
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pinned Emacs for reproducible Org export (Q3.7).
+      - name: Install Emacs + libxml2-utils
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends emacs-nox libxml2-utils
+          emacs --version | head -1
+
+      - name: Build site
+        run: |
+          make clean        # prune pages removed from src/ (Stage 1c note)
+          make publish
+
+      - name: Sanity-check output
+        run: |
+          test -f public/index.html
+          test -f public/projects/index.html
+          test -f public/writing/index.html
+          test -f public/blog/index.html
+          test -f public/feed.xml
+          test -f public/sitemap.xml
+          # feed + sitemap must be well-formed XML
+          xmllint --noout public/feed.xml public/sitemap.xml
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  # Deploy only on a v* tag.
+  deploy:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

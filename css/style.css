@@ -266,6 +266,32 @@ main.post-body .post-meta { font-family: var(--font-mono); }
 .skip-link:focus { left: .5rem; top: .5rem; }
 :focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
 
+/* ---- Minibuffer + help overlay (Q10.3/10.4, JS-only) ----------------- */
+.minibuffer, .help-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,.5);
+  display: flex; justify-content: center; align-items: flex-start;
+}
+.help-overlay { align-items: center; }
+.mb-box, .help-box {
+  background: var(--bg-alt); color: var(--fg);
+  border: 1px solid var(--amber);
+  margin-top: 18vh; padding: 1rem; width: min(90%, 32rem);
+  font-family: var(--font-mono);
+}
+.mb-input {
+  width: 100%; box-sizing: border-box;
+  background: var(--bg); color: var(--fg);
+  border: 1px solid var(--fg-muted); padding: .5rem;
+  font-family: var(--font-mono); font-size: 1rem;
+}
+.mb-list { list-style: none; margin: .5rem 0 0; padding: 0; }
+.mb-list li { padding: .2rem 0; }
+.help-box h2 { margin-top: 0; }
+.help-box dl { display: grid; grid-template-columns: auto 1fr; gap: .3rem 1rem; }
+.help-box dt { color: var(--amber); }
+.help-hint { color: var(--fg-muted); font-size: .8rem; margin-bottom: 0; }
+
 /* ---- Film-grain overlay (~2%, Q4.5) ---------------------------------- */
 body::after {
   content: "";
@@ -280,8 +306,37 @@ body::after {
   * { animation: none !important; transition: none !important; }
 }
 
-/* ---- Light "Sepia" theme: authored in Stage 4 (Q4.3) ----------------- */
-/* :root[data-theme="sepia"] { --bg:#e8e0cf; --fg:#2a2622; ... } */
+/* ---- Light "Sepia" theme (Q4.3) -------------------------------------- */
+/* Stalker's framing scenes: aged paper, darkened accents for AA on light. */
+:root[data-theme="sepia"] {
+  --bg:        #e8e0cf;
+  --bg-alt:    #ddd3bd;
+  --fg:        #2a2622;
+  --fg-muted:  #6b6356;
+  --amber:     #8a5a16;
+  --rust:      #8c3a2b;
+  --teal:      #2f6660;
+  --string:    #5c6b3a;
+}
+:root[data-theme="sepia"] { color-scheme: light; }
+/* Honor OS preference when the user has not chosen explicitly. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]):not([data-theme="sepia"]) {
+    --bg:#e8e0cf; --bg-alt:#ddd3bd; --fg:#2a2622; --fg-muted:#6b6356;
+    --amber:#8a5a16; --rust:#8c3a2b; --teal:#2f6660; --string:#5c6b3a;
+    color-scheme: light;
+  }
+}
+
+/* ---- Theme toggle button --------------------------------------------- */
+.theme-toggle {
+  background: none; border: 1px solid var(--fg-muted); color: var(--fg-muted);
+  font-family: var(--font-mono); font-size: .75rem; cursor: pointer;
+  padding: .1rem .5rem; border-radius: 3px; margin-left: 1rem;
+}
+.theme-toggle:hover { color: var(--amber); border-color: var(--amber); }
+/* Hidden until JS enables it (progressive enhancement). */
+.no-js .theme-toggle { display: none; }
 
 /* ---- Print (Q13.4) --------------------------------------------------- */
 @media print {

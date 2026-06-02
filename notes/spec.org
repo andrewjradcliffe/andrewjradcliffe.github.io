@@ -204,7 +204,10 @@ just because)?
 *** Q1.3a [follow-up] Which contact channels to show?
 - ANSWER: *Email, GitHub, Scholar/ORCID.* No LinkedIn. On =/about=
   (and possibly footer). Confirmed 2026-06-01:
-  + Email: =andrewjradcliffe@gmail.com= (git address) — obfuscated.
+  + Email: shown as readable text =andrewjradcliffe [at] gmail [dot]
+    com= — NOT a link, no =mailto:=, no plaintext address in the DOM
+    (corrected 2026-06-01; entity-encoding was rejected as fake
+    obfuscation since it renders to plaintext). Reader retypes it.
   + GitHub: https://github.com/andrewjradcliffe
   + Google Scholar: https://scholar.google.com/citations?user=2CHr3mEAAAAJ
   + ORCID: 0000-0002-8817-0383 (https://orcid.org/0000-0002-8817-0383)

@@ -168,6 +168,16 @@
     (concat head extra)))
 (advice-add 'org-html--build-head :around #'zone--inject-head)
 
+;; Root-relative links: Org turns [[/writing/]] into href="file:///writing/".
+;; Strip the spurious file:// prefix from absolute-path links so they stay
+;; site-root-relative (Q14.2). Applies to <a href> and src attributes.
+(defun zone--fix-root-links (text backend _info)
+  (if (org-export-derived-backend-p backend 'html)
+      (replace-regexp-in-string
+       "\\(href\\|src\\)=\"file://\\(/[^\"]*\\)\"" "\\1=\"\\2\"" text t)
+    text))
+(add-to-list 'org-export-filter-link-functions #'zone--fix-root-links)
+
 ;;;; Blog ---------------------------------------------------------------------
 ;; Posts live in src/blog/<slug>/index.org. A post with `#+DRAFT: t' is
 ;; excluded from the index, the feed, and prev/next (Q8.8). Metadata:
@@ -372,8 +382,16 @@ posts a `post-body' content class so serif prose applies (Q5.8)."
       (insert (format "Sitemap: %s/sitemap.xml\n" zone-site-url)))
     (message "Wrote sitemap.xml (%d urls) + robots.txt" (length htmls))))
 
+(defun zone-copy-root-icons (&rest _)
+  "Copy favicon.svg/.ico to the site root (browsers fetch /favicon.ico)."
+  (dolist (f '("favicon.svg" "favicon.ico"))
+    (let ((src (expand-file-name f (zone-path "img/")))
+          (dst (expand-file-name f zone-publish-dir)))
+      (when (file-exists-p src) (copy-file src dst t)))))
+
 (defun zone-finish (&rest _)
-  "Completion hook for zone-pages: feed, then sitemap + robots."
+  "Completion hook for zone-pages: icons, feed, sitemap + robots."
+  (zone-copy-root-icons)
   (zone-build-feed)
   (zone-build-sitemap))
 
