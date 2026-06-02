@@ -8,8 +8,8 @@
 #+end_export
 
 I am Andrew Radcliffe. I work on numerical methods, probabilistic
-machine learning, systems and graphs; more recently, agentic AI. I
-like Unix stuff and live in a world of pure text.
+machine learning, systems and graphs; more recently (last 1+ year),
+agentic AI. I like Unix stuff and live in a world of pure text.
 
 This site collects the open-source work, the occasional pre-print, and
 a blog.
