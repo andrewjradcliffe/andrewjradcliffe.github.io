@@ -1,6 +1,7 @@
 #+SETUPFILE: ../../site/setupfile.org
 #+TITLE: Writing
 #+SUBTITLE: Pre-prints & papers
+#+DESCRIPTION: Pre-prints and papers, including a constructive algorithm for the greatest convex minorant and least concave majorant.
 #+MATH: t
 
 Formal artifacts live here. Informal thinking goes to the [[/blog/][blog]].

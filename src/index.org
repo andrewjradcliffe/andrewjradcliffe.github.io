@@ -1,5 +1,34 @@
 #+SETUPFILE: ../site/setupfile.org
 #+TITLE: Andrew Radcliffe
+#+DESCRIPTION: Andrew Radcliffe — numerical methods, Monte Carlo, and the open-source tools that lean on them, in Rust and Julia.
 
-# Placeholder landing. Real sparse-portal copy + epigraphs land in Stage 3.
-The Zone is being rebuilt.
+# ── Landing copy (Q9.1/9.2). I drafted options; the live pair is marked
+#    [LIVE]. Swap freely; all original, none naming the influences.
+#
+# Primary line options:
+#   A) [LIVE] Numerical methods, mostly. Some of it even works.
+#   B) I build small, sharp tools and release them before they are done.
+#   C) A repository of provisional things. Provisional is the only kind.
+#
+# Second epigraph options:
+#   A) [LIVE] Everything here is provisional; that is the only finished
+#      thing about it.
+#   B) The work is the pushing. The summit is a rumor.
+#   C) Enter, look around, throw a nut ahead of you before each step.
+
+Numerical methods, mostly. Some of it even works.
+
+#+begin_export html
+<p class="epigraph epigraph-zone">Everything here is provisional;
+that is the only finished thing about it.</p>
+#+end_export
+
+#+begin_export html
+<nav class="portal" aria-label="Sections">
+  <a href="/projects/"><span class="g">projects</span><span class="d">open-source tools — Rust and Julia</span></a>
+  <a href="/writing/"><span class="g">writing</span><span class="d">pre-prints &amp; papers</span></a>
+  <a href="/blog/"><span class="g">blog</span><span class="d">essays, mostly technical</span></a>
+  <a href="/about/"><span class="g">about</span><span class="d">who, and how to reach me</span></a>
+  <a href="/uses/"><span class="g">uses</span><span class="d">the tools, and why</span></a>
+</nav>
+#+end_export

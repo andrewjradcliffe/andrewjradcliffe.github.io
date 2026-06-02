@@ -1,0 +1,28 @@
+#+SETUPFILE: ../../site/setupfile.org
+#+TITLE: Uses
+#+SUBTITLE: The tools, and why
+#+DESCRIPTION: The tools I reach for — Emacs, Linux, Rust, Julia, and a small command-line workshop.
+
+What I reach for. Subject to change; the good tools rarely do.
+
+* Editor & OS
+- *Emacs.* Not an editor so much as a Lisp machine that happens to edit
+  text. This site is built inside it. Org mode is the substrate for
+  notes, drafts, and — evidently — entire websites.
+- *Linux.* The whole environment is a programmable surface. The shell
+  is the IDE; the man pages are the docs; =/proc= is the truth.
+
+* Languages
+- *Rust* for anything that has to be correct and fast at the same time.
+  The borrow checker is a colleague who is annoying and always right.
+- *Julia* for numerical work and prototyping — where I want
+  mathematical notation to survive contact with the keyboard.
+- *Python* when the ecosystem leaves no choice. A complicated language
+  wearing a simple one's clothes; respect it and it mostly behaves.
+
+* Command-line tooling
+- =ripgrep= for search; =fd= for find; =xan= for pushing CSV/XLSX around
+  without summoning a 15-gigabyte interpreter to do it.
+- =git=, obviously. =make= for anything that runs more than twice.
+- =awk= and the rest of the Unix workshop, for the jobs too small to
+  deserve a program and too annoying to do by hand.

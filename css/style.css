@@ -228,6 +228,35 @@ main.post-body .post-meta { font-family: var(--font-mono); }
   .modeline .ml-date { margin-left: 0; }
 }
 
+/* ---- Landing portal (Q9.3) ------------------------------------------- */
+.epigraph-zone {
+  color: var(--fg-muted);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  margin: 1.5rem 0 2.5rem;
+}
+.portal { display: flex; flex-direction: column; gap: .15rem; }
+.portal a {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem 1rem;
+  padding: .55rem .25rem;
+  border-bottom: 1px solid #23282650;
+}
+.portal a:hover { background: var(--bg-alt); border-bottom-color: transparent; }
+.portal .g { color: var(--amber); min-width: 7ch; }
+.portal a:hover .g { color: var(--link-hover); }
+.portal .d { color: var(--fg-muted); font-size: .85rem; }
+
+/* ---- About: portrait, email, contacts -------------------------------- */
+.portrait {
+  float: right; margin: 0 0 1rem 1.5rem;
+  max-width: 40%; height: auto;
+  border: 1px solid #23282680;
+}
+.email { clear: both; }
+.email .addr { word-break: break-all; }
+@media (max-width: 32rem) { .portrait { float: none; display: block; margin: 0 0 1rem; } }
+
 /* ---- Accessibility: skip link + focus (Q13.1) ------------------------ */
 .skip-link {
   position: absolute; left: -9999px; top: 0;

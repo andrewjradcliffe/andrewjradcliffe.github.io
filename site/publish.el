@@ -142,14 +142,31 @@
                (:zone-keywords "KEYWORDS" nil nil nil)))
   (add-to-list 'org-export-options-alist opt))
 
-(defun zone--inject-math (orig info)
-  "Append our math loader to the <head> output when #+MATH: t is set."
-  (let ((head (funcall orig info)))
-    (if (plist-get info :zone-math)
-        (concat head
-                "<script defer src=\"/js/mathjax-loader.js\"></script>\n")
-      head)))
-(advice-add 'org-html--build-head :around #'zone--inject-math)
+(defun zone--meta-escape (s)
+  (let ((s (or s "")))
+    (dolist (p '(("&" . "&amp;") ("\"" . "&quot;") ("<" . "&lt;") (">" . "&gt;")) s)
+      (setq s (replace-regexp-in-string (regexp-quote (car p)) (cdr p) s t t)))))
+
+(defun zone--inject-head (orig info)
+  "Add per-page description + Open Graph meta, and the math loader when
+#+MATH: t is set. Single point for all <head> extras (Q12.1/12.2/3.8)."
+  (let* ((head (funcall orig info))
+         (title (zone--meta-escape
+                 (org-export-data (plist-get info :title) info)))
+         (desc (zone--meta-escape
+                (org-export-data (or (plist-get info :description) "") info)))
+         (extra ""))
+    (unless (string-empty-p desc)
+      (setq extra (concat extra
+                          (format "<meta name=\"description\" content=\"%s\" />\n" desc)
+                          (format "<meta property=\"og:description\" content=\"%s\" />\n" desc))))
+    (unless (string-empty-p title)
+      (setq extra (concat extra
+                          (format "<meta property=\"og:title\" content=\"%s\" />\n" title))))
+    (when (plist-get info :zone-math)
+      (setq extra (concat extra "<script defer src=\"/js/mathjax-loader.js\"></script>\n")))
+    (concat head extra)))
+(advice-add 'org-html--build-head :around #'zone--inject-head)
 
 ;;;; Blog ---------------------------------------------------------------------
 ;; Posts live in src/blog/<slug>/index.org. A post with `#+DRAFT: t' is
@@ -336,6 +353,30 @@ posts a `post-body' content class so serif prose applies (Q5.8)."
 ;; Blog postamble: posts get prev/next + reply footer above the modeline.
 (advice-add 'zone-postamble :around #'zone-postamble-blog)
 
+(defun zone-build-sitemap (&rest _)
+  "Write public/sitemap.xml + robots.txt from published HTML (Q12.5)."
+  (let* ((htmls (and (file-directory-p zone-publish-dir)
+                     (directory-files-recursively zone-publish-dir "index\\.html\\'")))
+         (sm (expand-file-name "sitemap.xml" zone-publish-dir)))
+    (with-temp-file sm
+      (insert "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
+      (insert "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n")
+      (dolist (h (sort htmls #'string<))
+        (let* ((rel (file-relative-name h zone-publish-dir))
+               (dir (file-name-directory rel))       ; nil for top-level index
+               (url (format "%s/%s" zone-site-url (or dir ""))))
+          (insert (format "  <url><loc>%s</loc></url>\n" url))))
+      (insert "</urlset>\n"))
+    (with-temp-file (expand-file-name "robots.txt" zone-publish-dir)
+      (insert "User-agent: *\nAllow: /\n")
+      (insert (format "Sitemap: %s/sitemap.xml\n" zone-site-url)))
+    (message "Wrote sitemap.xml (%d urls) + robots.txt" (length htmls))))
+
+(defun zone-finish (&rest _)
+  "Completion hook for zone-pages: feed, then sitemap + robots."
+  (zone-build-feed)
+  (zone-build-sitemap))
+
 ;;;; Project definition -------------------------------------------------------
 (setq org-publish-project-alist
       `(("zone-pages"
@@ -345,7 +386,7 @@ posts a `post-body' content class so serif prose applies (Q5.8)."
          :recursive t
          :publishing-function zone-publish-to-html   ; skips #+DRAFT posts
          :preparation-function zone-build-blog-index  ; (re)generate blog index
-         :completion-function zone-build-feed         ; write Atom feed.xml
+         :completion-function zone-finish             ; feed + sitemap + robots
          :with-toc nil
          :section-numbers nil)
 

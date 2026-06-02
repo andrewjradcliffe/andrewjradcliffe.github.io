@@ -20,3 +20,6 @@
 
 # Generated blog index (rebuilt by publish.el each run)
 /src/blog/index.org
+
+# Source photo (processed copy is img/portrait.jpg)
+/tbr-*.jpeg

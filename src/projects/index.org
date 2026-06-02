@@ -1,6 +1,7 @@
 #+SETUPFILE: ../../site/setupfile.org
 #+TITLE: Projects
 #+SUBTITLE: Open-source work — Rust and Julia
+#+DESCRIPTION: Small, sharp open-source tools in Rust and Julia: numerically-stable evaluation, sampling, linear algebra, and approximation.
 
 # DRAFT epigraph (Q6.9) — Unix "do one thing well", in my voice; edit freely.
 #+begin_quote

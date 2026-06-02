@@ -13,3 +13,7 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/css/style.css" />
 #+HTML_HEAD: <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 #+HTML_HEAD: <link rel="alternate" type="application/atom+xml" title="Andrew Radcliffe — blog" href="/feed.xml" />
+#+HTML_HEAD: <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+#+HTML_HEAD: <meta property="og:image" content="https://andrewjradcliffe.github.io/img/og.png" />
+#+HTML_HEAD: <meta property="og:type" content="website" />
+#+HTML_HEAD: <meta name="twitter:card" content="summary_large_image" />
