@@ -16,11 +16,10 @@
 #   B) The work is the pushing. The summit is a rumor.
 #   C) Enter, look around, throw a nut ahead of you before each step.
 
-Numerical methods, mostly. Some of it even works.
+On the other side of life.
 
 #+begin_export html
-<p class="epigraph epigraph-zone">Everything here is provisional;
-that is the only finished thing about it.</p>
+<p class="epigraph epigraph-zone">Work is play.</p>
 #+end_export
 
 #+begin_export html

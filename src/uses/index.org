@@ -11,3 +11,4 @@
 - *Rust*
 - *Julia*
 - *Python*
+- *Bash*

@@ -2,99 +2,12 @@
 #+TITLE: one must imagine
 #+DATE: 2026-06-01
 #+KEYWORDS: writing, research, the-absurd
-#+EPIGRAPH: struggle no more, let the LLM push the boulder
+#+EPIGRAPH: LLM it -- what would be the point?
 
-* This section is the only human-written one
+* This section is human-written
 The appearance of something, no? -- well-faked, but dead inside. How
 can one tell the difference between the words of an LLM and me? --
-look for ugliness: cynicism and sarcasm. What sits below is not
-exactly trash, but is not meaningful discussion of the topics (MWQ,
-Camus, etc.).
-
-Trite statements -- some boilerplate to build the site.
+look for human traits: cynicism and sarcasm.
 
 Perhaps we can perform the binary classification with this simple
 predicate: would a human bother to think and/or utter such rubbish?
-
-* Hereafter LLM sludge, imbued with my digested essence
-
-There is a particular cowardice that disguises itself as rigor. It says:
-not yet. The proof has a soft spot on page four. The benchmark only
-covers the easy regime. The API will surely change. Release when it is
-/done/ --- and so the thing is never released, because "done" is a
-horizon, and horizons recede precisely as fast as you walk toward them.
-
-I have started calling the things I publish in this state /pre-pre-prints/.
-Not preprints --- those are practically peer-reviewed by comparison ---
-but the stage before: the idea is crystallized, the construction is
-sound, and yet I know more is coming. An online variant. A tighter
-bound. The example I have not had time to work. The honest label for
-this is not "incomplete." It is "alive."
-
-* The fallacy of the finished thing
-
-We inherit, from mathematics and from the cleaner parts of engineering,
-a fantasy: that work has a terminal state. You prove the theorem, you
-ship the =1.0=, you close the ticket, and the object becomes inert ---
-finished, like a statue. But almost nothing real behaves this way. A
-library accretes users and therefore obligations. A proof, once
-published, immediately suggests its own generalization. The terminal
-state is a property of /dead/ things, and we should be suspicious of any
-process whose definition of success is indistinguishable from rigor
-mortis.
-
-Robert Musil spent twenty years on a novel he never finished, and the
-unfinishedness was not a failure of /The Man Without Qualities/ --- it
-was its subject. He prized what he called the /sense of possibility/:
-the faculty that, confronted with what is, can think with equal
-seriousness about what might be instead. The man with a sense of
-possibility does not say "here is the truth." He says "here is a truth;
-note its load-bearing assumptions; here is where it could give way."
-
-This is, not coincidentally, exactly the stance of good software written
-in the open.
-
-* Releasing is a speech act, not a verdict
-
-When you push a crate to a registry, you are not declaring the work
-complete. You are making a claim and inviting refutation. The version
-number is a promise about /compatibility/, not about /finality/ ---
-=0.1.0= says "this is the shape of the thing; I reserve the right to
-learn." To withhold the work until it is beyond criticism is to confuse
-two different acts: /shipping/, which is generous, and /defending/,
-which is vain.
-
-#+begin_src text
-idea  →  draft  →  [ pre-pre-print ]  →  arXiv  →  published
-                          ↑
-                     you are here, and that is fine
-#+end_src
-
-The bracketed stage has a bad reputation it does not deserve. A
-pre-pre-print with a stated foundation is strictly more honest than a
-polished artifact that hides its seams. It tells the reader: /here is
-what I am sure of, here is what I am not, and here is the door marked
-"open problems."/ The reader who wants certainty can wait for the journal.
-The reader who wants to /build/ can start today.
-
-* The boulder, reconsidered
-
-The obvious objection is Sisyphean despair: if nothing is ever finished,
-why push the boulder at all? Each release rolls back down --- a bug
-report, a counterexample, a faster implementation by someone else ---
-and tomorrow you push again.
-
-But Camus already answered this, and his answer was not consolation; it
-was reframing. The boulder does not need to stay at the summit for the
-pushing to have been worth it. The work /is/ the pushing. A training run
-that diverges at epoch 200 was not wasted; it told you where the cliff
-is. A draft that needs a third revision was not a failure of the first
-two; it was the only way the third could exist. One must imagine
-Sisyphus --- and the maintainer, and the author of the perpetually
-forthcoming online algorithm --- happy.
-
-So I will keep shipping things before they are done, with the seams
-showing and the open problems listed. If that offends your sense of
-finish, I would gently suggest that the sense of finish is the thing
-worth losing. The alternative --- the unpublished, the perfect, the
-silent --- is just a boulder that never moved at all.

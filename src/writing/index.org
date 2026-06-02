@@ -4,10 +4,11 @@
 #+DESCRIPTION: Pre-prints and papers, including a constructive algorithm for the greatest convex minorant and least concave majorant.
 #+MATH: t
 
-Formal artifacts live here. Informal thinking goes to the [[/blog/][blog]].
+Typically, unpublished stuff -- what I bothered to bring from paper to
+LaTeX.
 
 * Greatest convex minorant / least concave majorant
-=status: pre-pre-print= · [[/img/gcm-lcm-draft.pdf][PDF]] · related crate: [[https://crates.io/crates/gcm-lcm][gcm-lcm]]
+=status: pre-print= · [[/img/gcm-lcm-draft.pdf][PDF]] · related crate: [[https://crates.io/crates/gcm-lcm][gcm-lcm]]
 
 Given samples of a function on $[a,b]$, the *greatest convex minorant*
 (GCM) is the largest convex function lying below them, and the *least
@@ -26,8 +27,7 @@ point there instead.
 #+begin_src bibtex
 @misc{radcliffe_gcmlcm,
   author = {Radcliffe, Andrew J.},
-  title  = {Greatest convex minorant and least concave majorant:
-            a constructive algorithm},
+  title  = {An O(n) algorithm to construct the greatest convex minorant and least concave majorant},
   year   = {2023},
   note   = {pre-print},
   howpublished = {\url{https://andrewjradcliffe.github.io/writing/}}
