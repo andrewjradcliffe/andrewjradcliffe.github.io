@@ -1,8 +1,22 @@
 #+SETUPFILE: ../../../site/setupfile.org
-#+TITLE: Pre-pre-prints, or: one must imagine the draft happy
+#+TITLE: one must imagine
 #+DATE: 2026-06-01
 #+KEYWORDS: writing, research, the-absurd
 #+EPIGRAPH: The struggle itself toward the summit is enough to fill a repository.
+
+* This section is the only human-written one
+The appearance of something, no? -- well-faked, but dead inside. How
+can one tell the difference between the words of an LLM and me? --
+look for ugliness: cynicism and sarcasm. What sits below is not
+exactly trash, but is not meaningful discussion of the topics (MQW,
+Camus, etc.).
+
+Trite statements -- some boilerplate to build the site.
+
+Perhaps we can perform the binary classification with this simple
+predicate: would a human bother to think and/or utter such rubbish?
+
+* Hereafter LLM sludge, imbued with my digested essence
 
 There is a particular cowardice that disguises itself as rigor. It says:
 not yet. The proof has a soft spot on page four. The benchmark only
