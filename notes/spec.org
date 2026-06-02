@@ -1131,3 +1131,23 @@ These three are referenced by the plan. Read before Part III.
 - Comments system; analytics (Q8.7/Q12.4).
 - Custom domain (Q14.1) — one-line change when wanted.
 - Surfacing =anytomd-rs=/=bevy=/=gastown= (Q6.5).
+- *Rust-mode fontification* (Sub-spec A): deferred to when the Rust
+  essay (queued draft #2, Q8.3) is published. =rust-mode= is a 6-file
+  dependency chain; built-in =python=/=sh=/=cc= + vendored =julia-mode=
+  cover launch. The Zone theme already styles Rust's classes
+  (=org-keyword/constant/preprocessor=), so vendoring =rust-mode= +
+  siblings into =site/lib/= is the only remaining step. Until then,
+  Rust blocks render as un-fontified monospace (still readable).
+
+** Build-environment notes (discovered during implementation)
+- Local toolchain: Emacs 30.2 + python3 present, so =make publish=/
+  =serve= run locally; no need to wait for CI to see output.
+- =htmlize.el=, =julia-mode.el= (+latexsubs) are VENDORED into
+  =site/lib/= (pinned; =site/lib/PROVENANCE.txt=) for offline,
+  reproducible builds — consistent with the no-CDN §3 decision.
+- Screenshots (Q16.3): the env's =chromium-browser= wrapper is broken
+  (missing =.real=), so automated screenshots are unavailable here;
+  visual review is via your local =make serve=. Structural verification
+  (grep/contrast/HTTP) substitutes in this transcript.
+- CI build (Stage 4) must =make clean= first: incremental publish does
+  not prune pages deleted from =src/=.

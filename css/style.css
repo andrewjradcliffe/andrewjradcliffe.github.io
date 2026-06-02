@@ -129,6 +129,35 @@ pre, pre.src {
   line-height: 1.45;
 }
 
+/* ---- "the Zone" code theme (htmlize 'css output, Sub-spec A) --------- */
+/* htmlize emits .org-* classes; map them to the Zone palette.            */
+pre.src .org-keyword            { color: var(--amber); }
+pre.src .org-function-name      { color: var(--teal); }
+pre.src .org-variable-name      { color: var(--fg); }
+pre.src .org-string             { color: var(--string); }
+pre.src .org-comment,
+pre.src .org-comment-delimiter  { color: var(--fg-muted); font-style: italic; }
+pre.src .org-constant           { color: var(--rust); }
+pre.src .org-type               { color: #b9863d; }
+pre.src .org-builtin            { color: #6f9d8f; }
+pre.src .org-preprocessor       { color: var(--rust); }
+pre.src .org-operator           { color: var(--fg-muted); }
+pre.src .org-doc                { color: var(--string); font-style: italic; }
+pre.src .org-warning            { color: var(--rust); font-weight: 700; }
+
+/* Language label, restyled from the legacy pre.src-* mechanism (Q8.6) */
+pre.src { position: relative; }
+pre.src::before {
+  position: absolute; top: 0; right: .5rem;
+  color: var(--fg-muted); font-size: .7rem; opacity: 0;
+  transition: opacity .15s;
+}
+pre.src:hover::before { opacity: 1; }
+pre.src-rust::before   { content: "rust"; }
+pre.src-julia::before  { content: "julia"; }
+pre.src-python::before { content: "python"; }
+pre.src-sh::before, pre.src-bash::before, pre.src-shell::before { content: "shell"; }
+
 /* ---- Prose: serif for blog post bodies ONLY (Q5.8) ------------------- */
 .post-body p, .post-body li {
   font-family: var(--font-serif);

@@ -8,6 +8,28 @@
 (require 'ox-publish)
 (require 'ox-html)
 
+;;;; Vendored build deps (pinned in site/lib/; no network at build) --------
+(add-to-list 'load-path
+             (expand-file-name "lib"
+                               (file-name-directory
+                                (or load-file-name buffer-file-name))))
+(require 'htmlize)            ; needed for 'css fontified code output
+
+;; Language major modes for code fontification. Built-ins always present;
+;; vendored ones (julia) loaded if available; rust deferred (Sub-spec A).
+(require 'julia-mode nil t)
+(require 'cc-mode nil t)
+(autoload 'python-mode "python" nil t)
+(autoload 'sh-mode "sh-script" nil t)
+
+;; Map Org src languages -> major modes so htmlize fontifies them.
+(with-eval-after-load 'org-src
+  (dolist (pair '(("julia" . julia)
+                  ("python" . python)
+                  ("sh" . sh) ("bash" . sh) ("shell" . sh)
+                  ("C" . c) ("cpp" . c++)))
+    (add-to-list 'org-src-lang-modes pair)))
+
 ;;;; Paths -------------------------------------------------------------------
 ;; Resolve the repo root from THIS file's location, so the build works
 ;; regardless of the current working directory (local make + CI).
