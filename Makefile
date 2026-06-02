@@ -3,7 +3,7 @@ PUBLISH := site/publish.el
 PUBDIR  := public
 PORT    ?= 8000
 
-.PHONY: publish serve clean
+.PHONY: publish serve clean new-post
 
 ## Build the whole site into public/
 publish:
@@ -16,3 +16,7 @@ serve: publish
 ## Remove build output and Org timestamp cache
 clean:
 	rm -rf $(PUBDIR) .org-timestamps
+
+## Scaffold a new draft post:  make new-post t="Some Title"
+new-post:
+	bash scripts/new-post.sh "$(t)"

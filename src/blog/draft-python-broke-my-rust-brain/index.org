@@ -1,0 +1,15 @@
+#+SETUPFILE: ../../../site/setupfile.org
+#+TITLE: Why Python concurrency broke my Rust brain
+#+DATE: 2026-06-01
+#+KEYWORDS: python, rust, concurrency
+#+DRAFT: t
+#+EPIGRAPH: fork, spawn, forkserver — pick your poison, then read the docs again.
+
+# DRAFT (queued, Q8.3 #1). Theme, in my voice — no verbatim journal text:
+# - a "simple" job scheduler that is simple in Rust and isn't in Python
+# - fork vs spawn vs forkserver; what survives across the boundary
+# - why globals + a backend that forces spawn = no shared state
+# - the escape hatch: a standalone process + a socket
+# - the larger point: language semantics are a tax you pay on every line
+
+Opening paragraph TODO.

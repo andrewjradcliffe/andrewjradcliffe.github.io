@@ -12,3 +12,4 @@
 # (Org emits the viewport meta itself via org-html-viewport.)
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/css/style.css" />
 #+HTML_HEAD: <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+#+HTML_HEAD: <link rel="alternate" type="application/atom+xml" title="Andrew Radcliffe — blog" href="/feed.xml" />

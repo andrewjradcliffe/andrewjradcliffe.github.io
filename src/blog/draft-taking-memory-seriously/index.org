@@ -1,0 +1,16 @@
+#+SETUPFILE: ../../../site/setupfile.org
+#+TITLE: Taking memory seriously, or: a 48× lesson
+#+DATE: 2026-06-01
+#+KEYWORDS: performance, rust, tools
+#+DRAFT: t
+#+EPIGRAPH: A tool that OOMs on one large file is not a tool; it is a liability.
+
+# DRAFT (queued, Q8.3 #2). Theme, in my voice — no verbatim journal text:
+# - converting a single large spreadsheet should not need 15 GB of RAM
+# - the difference between a streaming reader and a slurp-it-all reader
+# - why a mature, correct dependency was passed over, and what that says
+#   about "bad-faith" open source (aimed at the practice, not the person)
+# - measure both time AND peak RSS; absolute numbers, not just ratios
+# - the embarrassment of a 48× speedup: it means the bar was on the floor
+
+Opening paragraph TODO.

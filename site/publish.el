@@ -7,6 +7,7 @@
 
 (require 'ox-publish)
 (require 'ox-html)
+(require 'cl-lib)
 
 ;;;; Vendored build deps (pinned in site/lib/; no network at build) --------
 (add-to-list 'load-path
@@ -42,6 +43,9 @@
 (defun zone-path (rel) (expand-file-name rel zone-root))
 
 (defconst zone-publish-dir (zone-path "public/"))
+(defconst zone-site-url "https://andrewjradcliffe.github.io"
+  "Absolute base URL, used for feed entry links (Q14.2).")
+(defconst zone-author "Andrew Radcliffe")
 
 ;;;; HTML export settings -----------------------------------------------------
 (setq make-backup-files nil
@@ -130,10 +134,13 @@
       ;; ...but suppress Org's CDN MathJax <script>; we supply our own.
       org-html-mathjax-template "")
 
-;; Register the #+MATH: keyword as an export option.
+;; Register custom keywords as export options.
 (require 'ox)
-(add-to-list 'org-export-options-alist
-             '(:zone-math "MATH" nil nil t))
+(dolist (opt '((:zone-math     "MATH"     nil nil t)
+               (:zone-draft    "DRAFT"    nil nil t)
+               (:zone-epigraph "EPIGRAPH" nil nil nil)
+               (:zone-keywords "KEYWORDS" nil nil nil)))
+  (add-to-list 'org-export-options-alist opt))
 
 (defun zone--inject-math (orig info)
   "Append our math loader to the <head> output when #+MATH: t is set."
@@ -144,6 +151,191 @@
       head)))
 (advice-add 'org-html--build-head :around #'zone--inject-math)
 
+;;;; Blog ---------------------------------------------------------------------
+;; Posts live in src/blog/<slug>/index.org. A post with `#+DRAFT: t' is
+;; excluded from the index, the feed, and prev/next (Q8.8). Metadata:
+;; #+TITLE #+DATE #+KEYWORDS(tags) #+EPIGRAPH (Q8.4). The index is
+;; reverse-chronological (Q8.5); the feed is Atom (Q12.3).
+
+(defconst zone-blog-src (zone-path "src/blog/"))
+
+(defun zone--read-keyword (file kw)
+  "Return the value of #+KW: from FILE, or nil. KW without colon."
+  (with-temp-buffer
+    (insert-file-contents file nil 0 2000)
+    (goto-char (point-min))
+    (when (re-search-forward (format "^#\\+%s:[ \t]*\\(.*\\)$" kw) nil t)
+      (let ((v (string-trim (match-string 1))))
+        (unless (string-empty-p v) v)))))
+
+(defun zone--post-files ()
+  "All post source files src/blog/<slug>/index.org (NOT the blog index itself)."
+  (when (file-directory-p zone-blog-src)
+    (cl-remove-if
+     (lambda (f)
+       ;; exclude src/blog/index.org (the generated listing)
+       (string= (expand-file-name f)
+                (expand-file-name "index.org" zone-blog-src)))
+     (directory-files-recursively zone-blog-src "\\`index\\.org\\'"))))
+
+(defun zone--post-meta (file)
+  "Plist of (:file :slug :title :date :tags :epigraph :draft) for FILE."
+  (let* ((slug (file-name-nondirectory
+                (directory-file-name (file-name-directory file))))
+         (tags (zone--read-keyword file "KEYWORDS")))
+    (list :file file
+          :slug slug
+          :title (or (zone--read-keyword file "TITLE") slug)
+          :date  (or (zone--read-keyword file "DATE") "")
+          :tags  (and tags (split-string tags "[ ,]+" t))
+          :epigraph (zone--read-keyword file "EPIGRAPH")
+          :draft (and (zone--read-keyword file "DRAFT") t))))
+
+(defun zone-published-posts ()
+  "Non-draft post metadata, newest first (Q8.5/Q8.8)."
+  (sort (cl-remove-if (lambda (m) (plist-get m :draft))
+                      (mapcar #'zone--post-meta (zone--post-files)))
+        (lambda (a b) (string> (plist-get a :date) (plist-get b :date)))))
+
+(defun zone--reading-time (file)
+  "Rough reading time in minutes for FILE body (~200 wpm)."
+  (with-temp-buffer
+    (insert-file-contents file)
+    (max 1 (round (/ (count-words (point-min) (point-max)) 200.0)))))
+
+;; Is the current export a blog post? (input under src/blog/)
+(defun zone--blog-post-p (info)
+  (let ((in (plist-get info :input-file)))
+    (and in (string-prefix-p zone-blog-src (expand-file-name in)))))
+
+(defun zone--post-header (info)
+  "Date · tags · reading-time line + optional epigraph, for a post top."
+  (let* ((in (plist-get info :input-file))
+         (date (org-export-data (plist-get info :date) info))
+         (date (if (string-empty-p date)
+                   (or (zone--read-keyword in "DATE") "") date))
+         (tags (let ((k (zone--read-keyword in "KEYWORDS")))
+                 (and k (split-string k "[ ,]+" t))))
+         (mins (zone--reading-time in))
+         (epi  (zone--read-keyword in "EPIGRAPH")))
+    (concat
+     "<p class=\"post-meta\">"
+     (and (not (string-empty-p date)) (format "<time>%s</time>" date))
+     (when tags
+       (concat " · " (mapconcat (lambda (tg)
+                                  (format "<span class=\"tag\">%s</span>" tg))
+                                tags " ")))
+     (format " · <span class=\"rt\">~%d min</span>" mins)
+     "</p>"
+     (when epi (format "<p class=\"epigraph\">%s</p>" epi)))))
+
+(defun zone--post-footer (info)
+  "Prev/next links + reply-by-email footer for a post (Q8.6/8.7)."
+  (let* ((in (expand-file-name (plist-get info :input-file)))
+         (posts (zone-published-posts))
+         (slugs (mapcar (lambda (m) (plist-get m :slug)) posts))
+         (this (file-name-nondirectory
+                (directory-file-name (file-name-directory in))))
+         (pos (cl-position this slugs :test #'string=))
+         ;; posts are newest-first: "newer" = previous index, "older" = next
+         (newer (and pos (> pos 0) (nth (1- pos) posts)))
+         (older (and pos (nth (1+ pos) posts))))
+    (concat
+     "<nav class=\"post-nav\" aria-label=\"Adjacent posts\">"
+     (if older
+         (format "<a class=\"prev\" href=\"/blog/%s/\">← %s</a>"
+                 (plist-get older :slug) (plist-get older :title))
+       "<span></span>")
+     (if newer
+         (format "<a class=\"next\" href=\"/blog/%s/\">%s →</a>"
+                 (plist-get newer :slug) (plist-get newer :title))
+       "<span></span>")
+     "</nav>"
+     "<p class=\"reply\">Found a mistake or have a thought? "
+     "<a href=\"/about/\">Reply by email</a> or open an issue.</p>")))
+
+;; Compose the post chrome into the postamble (after the modeline base).
+(defun zone-postamble-blog (orig info)
+  "For posts, prepend the post footer to the modeline postamble."
+  (if (zone--blog-post-p info)
+      (concat (zone--post-footer info) (funcall orig info))
+    (funcall orig info)))
+
+;; Inject the post header (date/tags/rt/epigraph) right after the body opens.
+(add-to-list 'org-export-filter-body-functions
+             (lambda (body backend info)
+               (if (and (org-export-derived-backend-p backend 'html)
+                        (zone--blog-post-p info))
+                   (concat (zone--post-header info) body)
+                 body)))
+
+;; Draft-aware publish: skip #+DRAFT posts entirely (Q8.8).
+(defun zone-publish-to-html (plist filename pub-dir)
+  "Like `org-html-publish-to-html', but skip #+DRAFT posts and give real
+posts a `post-body' content class so serif prose applies (Q5.8)."
+  (cond
+   ((and (string-match-p "/blog/" filename)
+         (zone--read-keyword filename "DRAFT"))
+    (message "Skipping draft: %s" filename) nil)
+   ((and (string-match-p "/blog/" filename)
+         (not (string-suffix-p "blog/index.org" filename)))
+    (let ((org-html-content-class "content post-body"))
+      (org-html-publish-to-html plist filename pub-dir)))
+   (t (org-html-publish-to-html plist filename pub-dir))))
+
+;;;; Blog index (reverse-chron) + Atom feed -----------------------------------
+(defun zone-build-blog-index (&rest _)
+  "Generate src/blog/index.org listing published posts, newest first."
+  (let ((posts (zone-published-posts)))
+    (with-temp-file (expand-file-name "index.org" zone-blog-src)
+      (insert "#+SETUPFILE: ../../site/setupfile.org\n")
+      (insert "#+TITLE: Blog\n\n")
+      (insert "Essays. Mostly technical, sometimes not.\n\n")
+      (if (null posts)
+          (insert "Nothing published yet.\n")
+        (dolist (m posts)
+          (insert (format "- =%s= [[/blog/%s/][%s]]\n"
+                          (plist-get m :date)
+                          (plist-get m :slug)
+                          (plist-get m :title))))))))
+
+(defun zone--atom-escape (s)
+  (let ((s (or s "")))
+    (dolist (p '(("&" . "&amp;") ("<" . "&lt;") (">" . "&gt;")) s)
+      (setq s (replace-regexp-in-string (regexp-quote (car p)) (cdr p) s t t)))))
+
+(defun zone-build-feed (&rest _)
+  "Write public/feed.xml (Atom) from published posts (Q12.3)."
+  (let* ((posts (zone-published-posts))
+         (updated (if posts (concat (plist-get (car posts) :date) "T00:00:00Z")
+                    "1970-01-01T00:00:00Z"))
+         (feed (expand-file-name "feed.xml" zone-publish-dir)))
+    (make-directory zone-publish-dir t)
+    (with-temp-file feed
+      (insert "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
+      (insert "<feed xmlns=\"http://www.w3.org/2005/Atom\">\n")
+      (insert (format "  <title>%s</title>\n" zone-author))
+      (insert (format "  <link href=\"%s/feed.xml\" rel=\"self\"/>\n" zone-site-url))
+      (insert (format "  <link href=\"%s/\"/>\n" zone-site-url))
+      (insert (format "  <id>%s/</id>\n" zone-site-url))
+      (insert (format "  <updated>%s</updated>\n" updated))
+      (insert (format "  <author><name>%s</name></author>\n" zone-author))
+      (dolist (m posts)
+        (let ((url (format "%s/blog/%s/" zone-site-url (plist-get m :slug))))
+          (insert "  <entry>\n")
+          (insert (format "    <title>%s</title>\n" (zone--atom-escape (plist-get m :title))))
+          (insert (format "    <link href=\"%s\"/>\n" url))
+          (insert (format "    <id>%s</id>\n" url))
+          (insert (format "    <updated>%sT00:00:00Z</updated>\n" (plist-get m :date)))
+          (dolist (tg (plist-get m :tags))
+            (insert (format "    <category term=\"%s\"/>\n" (zone--atom-escape tg))))
+          (insert "  </entry>\n")))
+      (insert "</feed>\n"))
+    (message "Wrote %s (%d entries)" feed (length posts))))
+
+;; Blog postamble: posts get prev/next + reply footer above the modeline.
+(advice-add 'zone-postamble :around #'zone-postamble-blog)
+
 ;;;; Project definition -------------------------------------------------------
 (setq org-publish-project-alist
       `(("zone-pages"
@@ -151,7 +343,9 @@
          :base-extension "org"
          :publishing-directory ,zone-publish-dir
          :recursive t
-         :publishing-function org-html-publish-to-html
+         :publishing-function zone-publish-to-html   ; skips #+DRAFT posts
+         :preparation-function zone-build-blog-index  ; (re)generate blog index
+         :completion-function zone-build-feed         ; write Atom feed.xml
          :with-toc nil
          :section-numbers nil)
 

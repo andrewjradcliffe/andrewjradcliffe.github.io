@@ -159,10 +159,38 @@ pre.src-python::before { content: "python"; }
 pre.src-sh::before, pre.src-bash::before, pre.src-shell::before { content: "shell"; }
 
 /* ---- Prose: serif for blog post bodies ONLY (Q5.8) ------------------- */
-.post-body p, .post-body li {
+/* Blog post content is <main class="content post-body">; serif applies to */
+/* running prose only — never code, headings, chrome, or metadata.         */
+main.post-body p, main.post-body li {
   font-family: var(--font-serif);
   font-size: 1.18rem;
 }
+main.post-body code, main.post-body pre,
+main.post-body .post-meta { font-family: var(--font-mono); }
+
+/* ---- Blog post metadata / epigraph (Q8.4) ---------------------------- */
+.post-meta { color: var(--fg-muted); font-size: .8rem; }
+.post-meta .tag { color: var(--teal); }
+.post-meta .rt  { color: var(--fg-muted); }
+.epigraph {
+  color: var(--fg-muted);
+  font-family: var(--font-serif);
+  font-style: italic;
+  border-left: 2px solid var(--rust);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+}
+
+/* ---- Prev/next + reply (Q8.6/8.7) ------------------------------------ */
+.post-nav {
+  display: flex; justify-content: space-between; gap: 1rem;
+  margin: 3rem 0 1rem; font-size: .85rem;
+}
+.post-nav .next { margin-left: auto; text-align: right; }
+.reply { color: var(--fg-muted); font-size: .85rem; }
+
+/* ---- Blog index list ------------------------------------------------- */
+.post-list, #content ul { line-height: 1.9; }
 
 /* ---- Breadcrumb nav (Q10.1) ------------------------------------------ */
 .nav {
