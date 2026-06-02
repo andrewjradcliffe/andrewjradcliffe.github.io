@@ -22,16 +22,18 @@ Requires Emacs (with Org) and =python3= on =PATH=. Build dependencies
 =site/lib/= and =js/mathjax/= — no network needed at build time.
 
 * Deploy
-CI (=.github/workflows/build.yml=) builds and validates on every push
-to =main= but does *not* publish. The live site deploys only when a
-=v*= tag is pushed:
+CI (=.github/workflows/build.yml=) builds and validates on every push.
+It deploys to Pages on a push to =main= (the default branch, allowed by
+the =github-pages= environment by default) or on a =v*= tag:
 
 #+begin_src bash
-git tag v1.2.0 -m "release notes"
-git push origin v1.2.0       # -> Actions builds, then deploys to Pages
+git push origin main          # -> builds, then deploys to Pages
+# or, for a deliberate tagged release (needs the environment to allow
+# v* refs: Settings -> Environments -> github-pages):
+git tag v1.2.0 -m "release notes" && git push origin v1.2.0
 #+end_src
 
-This keeps half-built states off the live site; it flips once, complete.
+One-time setup: Settings -> Pages -> Source = "GitHub Actions".
 
 * Adding content
 - *Blog post*: =make new-post t="Some title"= → edit the new

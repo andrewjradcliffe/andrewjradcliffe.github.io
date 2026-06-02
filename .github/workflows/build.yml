@@ -1,8 +1,10 @@
 name: build & deploy
 
-# Build (validate) on every push to main, but DO NOT deploy.
-# Deploy to Pages only when a v* tag is pushed, so the live site
-# flips once, complete (see notes/spec.org Q16.5).
+# Build on every push to main and on v* tags.
+# Deploy to Pages on push to main (default branch — allowed by the
+# github-pages environment out of the box) OR on a v* tag for deliberate
+# releases. main-deploy is the robust fallback; the tag path needs the
+# environment to allow v* refs (see notes/spec.org Q16.5).
 on:
   push:
     branches: [main]
@@ -52,9 +54,9 @@ jobs:
         with:
           path: public
 
-  # Deploy only on a v* tag.
+  # Deploy on push to main (default branch) or on a v* tag.
   deploy:
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     needs: build
     runs-on: ubuntu-24.04
     environment:
