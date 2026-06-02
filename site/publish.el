@@ -122,6 +122,28 @@
 (setq org-html-preamble  #'zone-preamble
       org-html-postamble #'zone-postamble)
 
+;;;; On-demand math (Q3.8/Q7.8) ----------------------------------------------
+;; A page opts in with `#+MATH: t'. We disable Org's own MathJax and inject
+;; our self-hosted CHTML loader into <head> only on math pages. Keeps /,
+;; /projects, etc. script-free.
+(setq org-html-with-latex 'mathjax     ; emit \(..\) / \[..\] markup
+      ;; ...but suppress Org's CDN MathJax <script>; we supply our own.
+      org-html-mathjax-template "")
+
+;; Register the #+MATH: keyword as an export option.
+(require 'ox)
+(add-to-list 'org-export-options-alist
+             '(:zone-math "MATH" nil nil t))
+
+(defun zone--inject-math (orig info)
+  "Append our math loader to the <head> output when #+MATH: t is set."
+  (let ((head (funcall orig info)))
+    (if (plist-get info :zone-math)
+        (concat head
+                "<script defer src=\"/js/mathjax-loader.js\"></script>\n")
+      head)))
+(advice-add 'org-html--build-head :around #'zone--inject-math)
+
 ;;;; Project definition -------------------------------------------------------
 (setq org-publish-project-alist
       `(("zone-pages"
@@ -149,7 +171,8 @@
 
         ("zone-js"
          :base-directory ,(zone-path "js/")
-         :base-extension "js"
+         :base-extension "js\\|woff2\\|woff\\|css"
+         :recursive t                  ; include js/mathjax/ subtree
          :publishing-directory ,(zone-path "public/js/")
          :publishing-function org-publish-attachment)
 

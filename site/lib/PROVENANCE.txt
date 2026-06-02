@@ -3,3 +3,5 @@
 htmlize.el                JuliaEditorSupport hniksic/emacs-htmlize@master
 julia-mode.el             JuliaEditorSupport/julia-emacs@master
 julia-mode-latexsubs.el   JuliaEditorSupport/julia-emacs@master
+mathjax/  mathjax-full@3 es5 (CHTML bundle + woff-v2 fonts only)
+  source: node_modules/mathjax-full (MathJax 3, Apache-2.0)

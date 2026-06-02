@@ -1,0 +1,116 @@
+#+SETUPFILE: ../../site/setupfile.org
+#+TITLE: Projects
+#+SUBTITLE: Open-source work — Rust and Julia
+
+# DRAFT epigraph (Q6.9) — Unix "do one thing well", in my voice; edit freely.
+#+begin_quote
+Small, sharp tools. Each does one thing; most do it without dependencies.
+Compose them, or steal the idea — the license permits both.
+#+end_quote
+
+* Numerically-stable evaluation
+The unglamorous arithmetic that keeps everything downstream finite.
+
+** lnexp
+=crates.io: v0.2.1= · =MIT OR Apache-2.0= · [[https://crates.io/crates/lnexp][crates.io]] · [[https://github.com/andrewjradcliffe/lnexp][source]]
+
+Compositions of =log=, =log1p=, =exp=, and =expm1=, carefully
+evaluated so as to avoid underflow/overflow.
+
+** logsumexp
+=crates.io: v0.1.0= · =MIT OR Apache-2.0= · [[https://crates.io/crates/logsumexp][crates.io]] · [[https://github.com/andrewjradcliffe/logsumexp][source]]
+
+Online (1-pass) [[https://en.wikipedia.org/wiki/LogSumExp][LogSumExp]] for iterators.
+
+** horner-eval
+=crates.io: v0.1.0= · =MIT OR Apache-2.0= · [[https://crates.io/crates/horner-eval][crates.io]] · [[https://github.com/andrewjradcliffe/horner-eval][source]]
+
+Evaluate polynomials using [[https://en.wikipedia.org/wiki/Horner%27s_method][Horner's method]]. Unroll polynomials of
+fixed size at compile time (and use =MulAdd=); useful if writing
+numerical libraries.
+
+** LogExpFunctionsExt.jl
+=Julia= · =MIT= · =merged upstream= → [[https://github.com/JuliaStats/LogExpFunctions.jl][LogExpFunctions.jl]]
+
+Merged into the [[https://github.com/JuliaStats/LogExpFunctions.jl][LogExpFunctions.jl]] package by way of [[https://github.com/JuliaStats/LogExpFunctions.jl/pull/82][PR #82]];
+no longer a standalone package, which is the happiest fate a small
+extension can have.
+
+* Sampling & Monte Carlo
+Drawing from distributions, exactly and quickly.
+
+** MarsagliaDiscreteSamplers.jl
+=Julia: v0.1.0= · =MIT= · [[https://github.com/andrewjradcliffe/MarsagliaDiscreteSamplers.jl][source]]
+
+Very fast samplers for discrete probability distributions.
+
+** CategoricalMonteCarlo.jl
+=Julia: v0.1.0= · =MIT= · [[https://github.com/andrewjradcliffe/CategoricalMonteCarlo.jl][source]]
+
+Ever wanted to sample from very high-dimensional joint distributions
+comprised entirely of discrete, independent marginals? This package
+does just that; it also offers various options for in-place
+transformation.
+
+** MonteCarloSummary.jl
+=Julia: v0.1.0= · =MIT= · [[https://github.com/andrewjradcliffe/MonteCarloSummary.jl][source]]
+
+The name says it all.
+
+** cmdstan-rs
+=GitHub: v0.1.0= · =BSD-3-Clause= · [[https://github.com/andrewjradcliffe/cmdstan-rs][source]]
+
+The README sort of says it all: do you need to integrate Stan in your
+system being developed in Rust? If yes, then you want this crate!
+
+Eventually I'll get around to getting the [[https://github.com/stan-dev/design-docs/pull/51][PR]] merged… life has taken
+a few unexpected branches since January 2024.
+
+* Linear algebra & optimization
+** Whitening.jl
+=Julia: v0.1.2= · =MIT= · [[https://github.com/andrewjradcliffe/Whitening.jl][source]]
+
+Whitening transformations: forward and inverse. Lightweight, with no
+dependencies other than =LinearAlgebra= stdlib.
+
+** OptimizationTestFunctions.jl
+=Julia: v0.1.0= · =MIT= · [[https://github.com/andrewjradcliffe/OptimizationTestFunctions.jl][source]]
+
+A wide variety of functions, $f : \mathbb{R}^{n} \mapsto \mathbb{R}$,
+which are most frequently used to test mathematical optimization
+algorithms. Also handy for testing automatic differentiation
+implementations.
+
+* Approximation
+** gcm-lcm
+=crates.io: v0.1.0= · =MIT OR Apache-2.0= · [[https://crates.io/crates/gcm-lcm][crates.io]] · [[https://github.com/andrewjradcliffe/gcm-lcm][source]] · [[/writing/][pre-print]]
+
+Greatest convex minorant, least concave majorant. Useful for variety
+of purposes; my interest was related to stochastic processes, but has
+general applicability as a convex (or concave) function approximator.
+
+* Performance & codegen
+** VectorizedReduction.jl
+=Julia: v0.1.13= · =MIT= · [[https://github.com/andrewjradcliffe/VectorizedReduction.jl][source]]
+
+Codegen for fast folds.
+
+* Data-wrangling & toys
+** RecursiveTiles.jl
+=Julia: v0.1.1= · =MIT= · [[https://github.com/andrewjradcliffe/RecursiveTiles.jl][source]]
+
+Ever receive the following? A table comprised of flattened trees,
+with:
+- parent-child relationships spanning more than one column
+- arbitrary order of columns, with no correspondence to parent-child
+  relationship
+- multiple flattened trees vertically concatenated into the same
+  table, but with unspecified begin/end
+If so, welcome to my life a few years ago. This package will enable
+you to roll that mess back into trees with a few lines of code.
+
+** dungeoncrawl
+=Rust= · [[https://github.com/andrewjradcliffe/dungeoncrawl][source]]
+
+You have probably played a video game at some point. Have you ever
+created one? The latter is more interesting, I promise!

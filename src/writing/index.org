@@ -1,0 +1,34 @@
+#+SETUPFILE: ../../site/setupfile.org
+#+TITLE: Writing
+#+SUBTITLE: Pre-prints & papers
+#+MATH: t
+
+Formal artifacts live here. Informal thinking goes to the [[/blog/][blog]].
+
+* Greatest convex minorant / least concave majorant
+=status: pre-pre-print= · [[/img/gcm-lcm-draft.pdf][PDF]] · related crate: [[https://crates.io/crates/gcm-lcm][gcm-lcm]]
+
+Given samples of a function on $[a,b]$, the *greatest convex minorant*
+(GCM) is the largest convex function lying below them, and the *least
+concave majorant* (LCM) is its concave dual. This note develops an
+algorithm to compute both, with an eye toward use as a convex (or
+concave) function approximator in stochastic-process problems.
+
+It is, by my own cheerful classification, a /pre-pre-print/: the idea
+is crystallized and the construction is rigorous, but more is coming
+(e.g. an online, single-pass variant). I am releasing it here so the
+companion crate [[https://crates.io/crates/gcm-lcm][gcm-lcm]] rests on a stated foundation rather than
+folklore. It needs endorsement before it can go to =arXiv.org=; when
+that happens, this link will point there instead.
+
+** How to cite
+#+begin_src bibtex
+@misc{radcliffe_gcmlcm,
+  author = {Radcliffe, Andrew J.},
+  title  = {Greatest convex minorant and least concave majorant:
+            a constructive algorithm},
+  year   = {2025},
+  note   = {Pre-pre-print},
+  howpublished = {\url{https://andrewjradcliffe.github.io/writing/}}
+}
+#+end_src
