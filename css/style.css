@@ -135,6 +135,42 @@ pre, pre.src {
   font-size: 1.18rem;
 }
 
+/* ---- Breadcrumb nav (Q10.1) ------------------------------------------ */
+.nav {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: .9rem 1.25rem;
+  font-size: .85rem;
+  color: var(--fg-muted);
+  font-weight: var(--fw-ui);
+}
+.nav-home { color: var(--fg); }
+.nav-sep  { color: var(--fg-muted); }
+.nav-here { color: var(--amber); }
+
+/* ---- Modeline footer — signature chrome (Q10.2) ---------------------- */
+.modeline {
+  flex-shrink: 0;
+  background: var(--bg-alt);
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-weight: var(--fw-ui);
+  font-size: .8rem;
+  padding: .4rem 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.25rem;
+  border-top: 1px solid #23282680;
+}
+.modeline .ml-lead  { color: var(--teal); }
+.modeline .ml-buf   { color: var(--fg); }
+.modeline .ml-theme { color: var(--amber); }
+.modeline .ml-date  { margin-left: auto; }
+@media (max-width: 32rem) {
+  .modeline .ml-mode, .modeline .ml-lead { display: none; }
+  .modeline .ml-date { margin-left: 0; }
+}
+
 /* ---- Accessibility: skip link + focus (Q13.1) ------------------------ */
 .skip-link {
   position: absolute; left: -9999px; top: 0;

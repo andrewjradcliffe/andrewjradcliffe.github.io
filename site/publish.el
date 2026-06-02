@@ -34,9 +34,71 @@
       ;; We own the <head> via setupfile.org; no Org default styles/scripts.
       org-html-head-include-default-style nil
       org-html-head-include-scripts nil
-      ;; Preamble/postamble are filled in Stage 1c; empty for now.
-      org-html-preamble nil
-      org-html-postamble nil)
+      ;; Semantic landmark: content wrapper becomes <main id="content"> so
+      ;; the skip-link target and the <main> landmark coincide (Q13.1).
+      ;; preamble/postamble stay plain divs wrapping our own <nav>/<footer>.
+      org-html-divs '((preamble  "div"  "preamble")
+                      (content   "main" "content")
+                      (postamble "div"  "postamble")))
+
+;;;; Chrome: breadcrumb nav (preamble) + Emacs modeline (postamble) --------
+;; No shell prompt (Q10.1). The modeline footer is the signature chrome
+;; element (Q10.2). Both rendered as functions so page name + build date
+;; are computed per page.
+
+(defconst zone-sections
+  '(("projects" . "projects")
+    ("writing"  . "writing")
+    ("blog"     . "blog")
+    ("about"    . "about")
+    ("uses"     . "uses"))
+  "Top-level sections for the breadcrumb nav, in order.")
+
+(defun zone--page-slug (info)
+  "Return a short page label (without .org) for the file in INFO."
+  (let* ((in (plist-get info :input-file))
+         (base (and in (file-name-base in)))
+         (dir  (and in (file-name-nondirectory
+                        (directory-file-name (file-name-directory in))))))
+    (cond ((null in) "index")
+          ;; blog posts live in src/blog/<slug>.org
+          ((and (string= base "index") (not (string= dir "src"))) dir)
+          (t base))))
+
+(defun zone-preamble (info)
+  "Plain-text breadcrumb nav (Q10.1). Home + the top sections."
+  (let ((slug (zone--page-slug info)))
+    (concat
+     "<a class=\"skip-link\" href=\"#content\">Skip to content</a>\n"
+     "<nav class=\"nav\" aria-label=\"Primary\">"
+     "<a class=\"nav-home\" href=\"/\">Andrew Radcliffe</a>"
+     "<span class=\"nav-sep\"> / </span>"
+     (mapconcat
+      (lambda (s)
+        (let ((name (car s)) (path (cdr s)))
+          (if (string= name slug)
+              (format "<span class=\"nav-here\" aria-current=\"page\">%s</span>" name)
+            (format "<a href=\"/%s/\">%s</a>" path name))))
+      zone-sections
+      "<span class=\"nav-sep\"> · </span>")
+     "</nav>")))
+
+(defun zone-postamble (info)
+  "Emacs-style modeline footer (Q10.2): page.org (Org) the-Zone rebuilt DATE."
+  (let ((slug (zone--page-slug info))
+        (date (format-time-string "%Y-%m-%d")))
+    (format
+     (concat "<footer class=\"modeline\" role=\"contentinfo\">"
+             "<span class=\"ml-lead\">-UUU:----</span> "
+             "<span class=\"ml-buf\">%s.org</span>"
+             "<span class=\"ml-mode\">(Org)</span>"
+             "<span class=\"ml-theme\">the-Zone</span>"
+             "<span class=\"ml-date\">rebuilt %s</span>"
+             "</footer>")
+     slug date)))
+
+(setq org-html-preamble  #'zone-preamble
+      org-html-postamble #'zone-postamble)
 
 ;;;; Project definition -------------------------------------------------------
 (setq org-publish-project-alist
