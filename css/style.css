@@ -1,19 +1,171 @@
-/* the Zone — minimal bootstrap (full design tokens land in Stage 1b). */
-:root {
-  --bg: #0e1110;
-  --fg: #c8c2b6;
-  --teal: #4e8d86;
-  --amber: #c8923d;
+/* ======================================================================
+   the Zone — design tokens & base styles
+   Single source of visual truth. See notes/spec.org Part 0 Sub-spec B.
+   Dark "the Zone" is the launch theme; light "Sepia" arrives in Stage 4.
+   ====================================================================== */
+
+/* ---- Fonts (self-hosted, subset woff2) ------------------------------- */
+@font-face {
+  font-family: "JuliaMono"; font-style: normal; font-weight: 400;
+  font-display: swap; src: url("/fonts/JuliaMono-Regular.woff2") format("woff2");
 }
-html { color-scheme: dark; }
+@font-face {
+  font-family: "JuliaMono"; font-style: italic; font-weight: 400;
+  font-display: swap; src: url("/fonts/JuliaMono-Italic.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JuliaMono"; font-style: normal; font-weight: 500;
+  font-display: swap; src: url("/fonts/JuliaMono-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JuliaMono"; font-style: normal; font-weight: 700;
+  font-display: swap; src: url("/fonts/JuliaMono-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "EB Garamond"; font-style: normal; font-weight: 400;
+  font-display: swap; src: url("/fonts/EBGaramond-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "EB Garamond"; font-style: italic; font-weight: 400;
+  font-display: swap; src: url("/fonts/EBGaramond-Italic.woff2") format("woff2");
+}
+
+/* ---- Tokens ---------------------------------------------------------- */
+:root {
+  /* color — dark "the Zone" (Q4.2) */
+  --bg:        #0e1110;
+  --bg-alt:    #161a18;
+  --fg:        #c8c2b6;
+  --fg-muted:  #7c8079;
+  --amber:     #c8923d;
+  --rust:      #a44f3e;
+  --teal:      #4e8d86;
+  --string:    #8a9b6e;
+
+  /* links (Q4.4) */
+  --link:         var(--teal);
+  --link-hover:   var(--amber);
+  --link-visited: var(--rust);
+
+  /* type (Q5.4) */
+  --font-mono:  "JuliaMono", ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+  --font-serif: "EB Garamond", Georgia, "Times New Roman", serif;
+  --fs-base: 18px;
+  --lh-base: 1.6;
+  --measure: 68ch;
+
+  /* modular scale 1.25 (Q5.7) */
+  --fs-h1: 2.441rem;
+  --fs-h2: 1.953rem;
+  --fs-h3: 1.563rem;
+  --fs-h4: 1.25rem;
+
+  --fw-light: 300;  /* JuliaMono Light not shipped; falls back to Regular */
+  --fw-ui:    500;  /* Medium, for chrome */
+
+  --space: 1.5rem;
+}
+
+/* ---- Reset-ish ------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { color-scheme: dark; font-size: var(--fs-base); }
+
 body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: var(--bg);
   color: var(--fg);
-  font-family: "JuliaMono", ui-monospace, Menlo, Consolas, monospace;
-  line-height: 1.6;
-  margin: 0 auto;
-  max-width: 68ch;
-  padding: 2rem 1.25rem;
+  font-family: var(--font-mono);
+  line-height: var(--lh-base);
+  /* ligatures OFF everywhere (Q5.5) */
+  font-feature-settings: "liga" 0, "calt" 0;
+  font-variant-ligatures: none;
 }
-a { color: var(--teal); }
-a:hover { color: var(--amber); }
+
+/* ---- Layout ---------------------------------------------------------- */
+#content, .page {
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: var(--space) 1.25rem;
+  flex: 1 0 auto;
+}
+
+/* ---- Headings (amber, JuliaMono) ------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--amber);
+  font-family: var(--font-mono);
+  line-height: 1.25;
+  font-weight: 700;
+}
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+h4 { font-size: var(--fs-h4); }
+h1.title { font-weight: var(--fw-light); letter-spacing: .02em; }
+
+/* ---- Links ----------------------------------------------------------- */
+a            { color: var(--link); text-decoration: none; border-bottom: 1px solid transparent; }
+a:hover      { color: var(--link-hover); border-bottom-color: currentColor; }
+a:visited    { color: var(--link-visited); }
+a:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+/* ---- Code ------------------------------------------------------------ */
+code, kbd, samp { font-family: var(--font-mono); }
+:not(pre) > code {
+  background: var(--bg-alt);
+  padding: .1em .35em;
+  border-radius: 3px;
+  color: var(--fg);
+}
+pre, pre.src {
+  background: var(--bg-alt);
+  border: 1px solid #23282625;
+  border-radius: 4px;
+  padding: .9rem 1rem;
+  overflow: auto;
+  line-height: 1.45;
+}
+
+/* ---- Prose: serif for blog post bodies ONLY (Q5.8) ------------------- */
+.post-body p, .post-body li {
+  font-family: var(--font-serif);
+  font-size: 1.18rem;
+}
+
+/* ---- Accessibility: skip link + focus (Q13.1) ------------------------ */
+.skip-link {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--amber); color: var(--bg);
+  padding: .5rem .75rem; z-index: 100;
+}
+.skip-link:focus { left: .5rem; top: .5rem; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+/* ---- Film-grain overlay (~2%, Q4.5) ---------------------------------- */
+body::after {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: .02;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@media (prefers-reduced-motion: reduce) {
+  body::after { display: none; }
+  * { animation: none !important; transition: none !important; }
+}
+
+/* ---- Light "Sepia" theme: authored in Stage 4 (Q4.3) ----------------- */
+/* :root[data-theme="sepia"] { --bg:#e8e0cf; --fg:#2a2622; ... } */
+
+/* ---- Print (Q13.4) --------------------------------------------------- */
+@media print {
+  :root { --bg:#fff; --fg:#000; --fg-muted:#333; }
+  body { background:#fff; color:#000; }
+  body::after { display:none; }
+  .nav, .modeline, .skip-link { display:none !important; }
+  a { color:#000; border:0; }
+}
