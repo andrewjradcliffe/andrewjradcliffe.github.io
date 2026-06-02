@@ -5,7 +5,7 @@
 
 # DRAFT epigraph (Q6.9) — Unix "do one thing well", in my voice; edit freely.
 #+begin_quote
-Small, sharp tools. Each does one thing; most do it without dependencies.
+Focused tools. Each does one thing; most do it without dependencies.
 Compose them, or steal the idea — the license permits both.
 #+end_quote
 

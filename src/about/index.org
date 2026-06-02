@@ -7,22 +7,15 @@
      alt="Andrew Radcliffe" loading="lazy" />
 #+end_export
 
-I am Andrew Radcliffe. I work on numerical methods, Monte Carlo, and
-the machine-learning systems that lean on them — mostly in Rust and
-Julia, occasionally in whatever the problem demands. I like small,
-correct tools and proofs that fit in the head.
+I am Andrew Radcliffe. I work on numerical methods, probabilistic
+machine learning, systems and graphs; more recently, agentic AI. I
+like Unix stuff and live in a world of pure text.
 
 This site collects the open-source work, the occasional pre-print, and
-a blog where I think out loud. None of it is finished; see the [[/blog/2026-06-01-imagine-the-draft-happy/][first post]]
-for why I consider that a feature.
+a blog.
 
 * Contact
 - Email: =andrewjradcliffe [at] gmail [dot] com=
 - GitHub: [[https://github.com/andrewjradcliffe][@andrewjradcliffe]]
 - Google Scholar: [[https://scholar.google.com/citations?user=2CHr3mEAAAAJ][profile]]
 - ORCID: [[https://orcid.org/0000-0002-8817-0383][0000-0002-8817-0383]]
-
-* Colophon
-Built in Emacs, exported from Org mode, set in [[https://juliamono.netlify.app/][JuliaMono]] (with
-EB Garamond for long-form prose). Everything is self-hosted: no CDNs,
-no trackers, no analytics. The source lives [[https://github.com/andrewjradcliffe/andrewjradcliffe.github.io][on GitHub]].
