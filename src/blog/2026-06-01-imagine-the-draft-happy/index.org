@@ -2,7 +2,7 @@
 #+TITLE: one must imagine
 #+DATE: 2026-06-01
 #+KEYWORDS: writing, research, the-absurd
-#+EPIGRAPH: The struggle itself toward the summit is enough to fill a repository.
+#+EPIGRAPH: struggle no more, let the LLM push the boulder
 
 * This section is the only human-written one
 The appearance of something, no? -- well-faked, but dead inside. How
