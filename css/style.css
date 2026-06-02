@@ -1,0 +1,19 @@
+/* the Zone — minimal bootstrap (full design tokens land in Stage 1b). */
+:root {
+  --bg: #0e1110;
+  --fg: #c8c2b6;
+  --teal: #4e8d86;
+  --amber: #c8923d;
+}
+html { color-scheme: dark; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "JuliaMono", ui-monospace, Menlo, Consolas, monospace;
+  line-height: 1.6;
+  margin: 0 auto;
+  max-width: 68ch;
+  padding: 2rem 1.25rem;
+}
+a { color: var(--teal); }
+a:hover { color: var(--amber); }

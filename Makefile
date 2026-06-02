@@ -7,7 +7,7 @@ PORT    ?= 8000
 
 ## Build the whole site into public/
 publish:
-	$(EMACS) --batch -l $(PUBLISH) -f org-publish-all
+	$(EMACS) --batch -l $(PUBLISH) --eval '(org-publish "zone" t)'
 
 ## Build, then serve public/ locally
 serve: publish

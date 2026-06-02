@@ -6,9 +6,9 @@
 
 #+LANGUAGE: en
 #+OPTIONS: toc:nil num:nil author:nil timestamp:nil ^:{} html-style:nil
-#+OPTIONS: html-postamble:nil html-preamble:t
+# Preamble (nav) and postamble (modeline) are supplied by site/publish.el.
 #+HTML_DOCTYPE: html5
 
-#+HTML_HEAD: <meta name="viewport" content="width=device-width, initial-scale=1" />
+# (Org emits the viewport meta itself via org-html-viewport.)
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/css/style.css" />
 #+HTML_HEAD: <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
