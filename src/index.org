@@ -24,10 +24,10 @@ On the other side of life.
 
 #+begin_export html
 <nav class="portal" aria-label="Sections">
-  <a href="/projects/"><span class="g">projects</span><span class="d">open-source tools — Rust and Julia</span></a>
-  <a href="/writing/"><span class="g">writing</span><span class="d">pre-prints &amp; papers</span></a>
-  <a href="/blog/"><span class="g">blog</span><span class="d">essays, mostly technical</span></a>
-  <a href="/about/"><span class="g">about</span><span class="d">who, and how to reach me</span></a>
-  <a href="/tikal/"><span class="g">TIKaL</span><span class="d">tools I know and love</span></a>
+<a href="/projects/"><span class="g">projects</span><span class="d">open-source things</span></a>
+<a href="/writing/"><span class="g">writing</span><span class="d">pre-prints &amp; papers</span></a>
+<a href="/blog/"><span class="g">blog</span><span class="d">essays</span></a>
+<a href="/about/"><span class="g">about</span><span class="d">how to reach me</span></a>
+<a href="/tikal/"><span class="g">TIKaL</span><span class="d">tools I know and love</span></a>
 </nav>
 #+end_export
