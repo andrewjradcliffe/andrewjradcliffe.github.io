@@ -44,7 +44,7 @@
   /* ---- Minibuffer: "/" fuzzy jump ----------------------------------- */
   var SECTIONS = [
     ["projects", "/projects/"], ["writing", "/writing/"],
-    ["blog", "/blog/"], ["about", "/about/"], ["uses", "/uses/"],
+    ["blog", "/blog/"], ["about", "/about/"], ["tikal", "/tikal/"],
     ["home", "/"]
   ];
   var mb, mbInput, mbList, mbOpen = false;

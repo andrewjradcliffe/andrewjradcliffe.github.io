@@ -28,6 +28,6 @@ On the other side of life.
   <a href="/writing/"><span class="g">writing</span><span class="d">pre-prints &amp; papers</span></a>
   <a href="/blog/"><span class="g">blog</span><span class="d">essays, mostly technical</span></a>
   <a href="/about/"><span class="g">about</span><span class="d">who, and how to reach me</span></a>
-  <a href="/uses/"><span class="g">uses</span><span class="d">the tools, and why</span></a>
+  <a href="/tikal/"><span class="g">TIKaL</span><span class="d">tools I know and love</span></a>
 </nav>
 #+end_export

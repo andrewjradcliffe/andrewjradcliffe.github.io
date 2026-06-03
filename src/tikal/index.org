@@ -1,6 +1,6 @@
 #+SETUPFILE: ../../site/setupfile.org
-#+TITLE: Uses
-#+SUBTITLE: Tools I know and love (TIKaL)
+#+TITLE: TIKaL
+#+SUBTITLE: Tools I know and love
 #+DESCRIPTION: The tools I reach for — Emacs, Linux, Rust, Julia
 
 * Editor & OS

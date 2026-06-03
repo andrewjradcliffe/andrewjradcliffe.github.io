@@ -73,11 +73,12 @@
 ;; are computed per page.
 
 (defconst zone-sections
+  ;; (display-label . url-path) — label may differ in case from the path.
   '(("projects" . "projects")
     ("writing"  . "writing")
     ("blog"     . "blog")
     ("about"    . "about")
-    ("uses"     . "uses"))
+    ("TIKaL"    . "tikal"))
   "Top-level sections for the breadcrumb nav, in order.")
 
 (defun zone--page-slug (info)
@@ -102,7 +103,9 @@
      (mapconcat
       (lambda (s)
         (let ((name (car s)) (path (cdr s)))
-          (if (string= name slug)
+          ;; Match the current page on PATH (the slug), not the label,
+          ;; so a label like "TIKaL" can differ in case from path "tikal".
+          (if (string= path slug)
               (format "<span class=\"nav-here\" aria-current=\"page\">%s</span>" name)
             (format "<a href=\"/%s/\">%s</a>" path name))))
       zone-sections
